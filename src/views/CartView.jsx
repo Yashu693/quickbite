@@ -3,12 +3,15 @@ import { COUPONS, PREP_FEE } from '../data/constants';
 import { resolveFoodItem } from '../utils/helpers';
 import { BottomNav } from '../components/layout/BottomNav';
 import { SwipeToPay } from '../components/payment/SwipeToPay';
+import { usePreventExit } from '../hooks';
 
 export default function CartView({ user, college, cart, setCart, addToast, go, onGoToPay }) {
   const [coupon, setCoupon] = useState('');
   const [couponMsg, setCouponMsg] = useState('');
   const [disc, setDisc] = useState(0);
   const [showOffers, setShowOffers] = useState(false);
+
+  usePreventExit('/home');
 
   const items = Object.entries(cart).map(([id, qty]) => { const f = resolveFoodItem(id); return f ? { ...f, qty } : null; }).filter(Boolean);
   const sub = items.reduce((s, i) => s + i.price * i.qty, 0);

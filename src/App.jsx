@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth, db, doc, setDoc, addDoc, collection, serverTimestamp } from './firebase.js';
 import { DB, randId, randToken } from './utils/helpers';
@@ -26,9 +27,18 @@ import AdminDashboardView from './views/AdminDashboardView';
 // ═══════════════════════════════════════════════════════════════════════════
 export default function App() {
   const { dark, toggleDark } = useTheme();
+  const navigate = useNavigate();
   const [splash, setSplash] = useState(true);
-  const [view, setView] = useState('login');
   const [user, setUser] = useState(null);
+
+  const setView = (v) => navigate(v === 'login' ? '/' : `/${v}`);
+
+  useEffect(() => {
+    // Android hardware back button exit prevention
+    if (window.history.length <= 1) {
+      window.history.pushState(null, "", window.location.href);
+    }
+  }, []);
   const [college, setCollege] = useState(null);
   const [cart, setCart] = useState({});
   const [orders, setOrders] = useState([]);
@@ -166,17 +176,23 @@ export default function App() {
       <div className="app-container">
         <div style={{ position: 'absolute', inset: 0, background: 'var(--bg)', pointerEvents: 'none', zIndex: 0 }} />
         <div className="view-container" style={{ zIndex: 1 }}>
-          {splash && <SplashScreen onDone={() => { }} />}
-          {!splash && view === 'login' && <LoginView onLogin={doLogin} dark={dark} toggleDark={toggleDark} />}
-          {!splash && view === 'collegeSelect' && <CollegeSelectView user={user} onSelect={doCollege} />}
-          {!splash && view === 'home' && <HomeView user={user} college={college} cart={cart} setCart={setCart} addToast={addToast} go={go} dark={dark} toggleDark={toggleDark} skeletonMode={skel} pendingOrder={pendingOrder} />}
-          {!splash && view === 'cart' && <CartView user={user} college={college} cart={cart} setCart={setCart} addToast={addToast} go={go} onGoToPay={onGoToPay} />}
-          {!splash && view === 'payment' && payData && <PaymentView orderData={payData} college={college} onSuccess={onPayOK} onBack={() => setView('cart')} />}
-          {!splash && view === 'tracking' && pendingOrder && <TrackingView order={pendingOrder} onDone={() => go('home')} onViewReceipt={() => go('receipt')} addToast={addToast} />}
-          {!splash && view === 'receipt' && pendingOrder && <ReceiptView order={pendingOrder} onDone={() => go('tracking')} />}
-          {!splash && view === 'history' && <HistoryView orders={orders} go={go} addToast={addToast} setCart={setCart} cartCount={totalCartItems} onViewTracking={viewOrder} />}
-          {!splash && view === 'profile' && <ProfileView user={user} college={college} dark={dark} toggleDark={toggleDark} go={go} orders={orders} onLogout={onLogout} onChangeCollege={() => setView('collegeSelect')} cartCount={totalCartItems} addToast={addToast} />}
-          {!splash && view === 'admin' && <AdminDashboardView go={go} />}
+          {splash ? (
+            <SplashScreen onDone={() => { }} />
+          ) : (
+            <Routes>
+              <Route path="/" element={<LoginView onLogin={doLogin} dark={dark} toggleDark={toggleDark} />} />
+              <Route path="/collegeSelect" element={<CollegeSelectView user={user} onSelect={doCollege} />} />
+              <Route path="/home" element={<HomeView user={user} college={college} cart={cart} setCart={setCart} addToast={addToast} go={go} dark={dark} toggleDark={toggleDark} skeletonMode={skel} pendingOrder={pendingOrder} />} />
+              <Route path="/cart" element={<CartView user={user} college={college} cart={cart} setCart={setCart} addToast={addToast} go={go} onGoToPay={onGoToPay} />} />
+              <Route path="/payment" element={payData ? <PaymentView orderData={payData} college={college} onSuccess={onPayOK} onBack={() => setView('cart')} /> : <Navigate to="/cart" />} />
+              <Route path="/tracking" element={pendingOrder ? <TrackingView order={pendingOrder} onDone={() => go('home')} onViewReceipt={() => go('receipt')} addToast={addToast} /> : <Navigate to="/home" />} />
+              <Route path="/receipt" element={pendingOrder ? <ReceiptView order={pendingOrder} onDone={() => go('tracking')} /> : <Navigate to="/home" />} />
+              <Route path="/history" element={<HistoryView orders={orders} go={go} addToast={addToast} setCart={setCart} cartCount={totalCartItems} onViewTracking={viewOrder} />} />
+              <Route path="/profile" element={<ProfileView user={user} college={college} dark={dark} toggleDark={toggleDark} go={go} orders={orders} onLogout={onLogout} onChangeCollege={() => setView('collegeSelect')} cartCount={totalCartItems} addToast={addToast} />} />
+              <Route path="/admin" element={<AdminDashboardView go={go} />} />
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+          )}
         </div>
         <NetworkBanner online={online} />
         <ToastOverlay toasts={toasts} />

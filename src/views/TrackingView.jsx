@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { fmtSecs } from '../utils/helpers';
 import { CircularTimer } from '../components/payment/CircularTimer';
+import { usePreventExit, useConfirmExit } from '../hooks';
 
 export default function TrackingView({ order, onDone, onViewReceipt, addToast }) {
   const maxPrepSecs = useMemo(() => {
@@ -12,6 +13,9 @@ export default function TrackingView({ order, onDone, onViewReceipt, addToast })
     if (!order?.date) return 0;
     return Math.floor((Date.now() - new Date(order.date).getTime()) / 1000);
   }, [order]);
+
+  usePreventExit('/home');
+  useConfirmExit('Are you sure? Your order tracking progress will be lost.');
 
   const [stage, setStage] = useState(passedSecs >= (maxPrepSecs + 3) ? 3 : passedSecs > 3 ? 2 : passedSecs > 1 ? 1 : 0);
   const [countdown, setCd] = useState(Math.max(0, maxPrepSecs - Math.max(0, passedSecs - 3)));

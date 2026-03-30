@@ -151,8 +151,6 @@ export const PaymentMethods = ({ user, close, addToast }) => {
           ))}
         </div>
       )}
-
-      <button onClick={close} className="press" style={{ width: '100%', padding: '14px', borderRadius: 16, border: 'none', background: 'var(--inp)', color: 'var(--txt)', fontWeight: 800, fontSize: 14, cursor: 'pointer' }}>Close</button>
     </>
   );
 };

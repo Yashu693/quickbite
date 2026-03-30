@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Confetti } from '../components/feedback/Confetti';
+import { usePreventExit, useConfirmExit } from '../hooks';
 
 export default function PaymentView({ orderData, college, onSuccess, onBack }) {
   const [state, setState] = useState('methods');
@@ -7,6 +8,9 @@ export default function PaymentView({ orderData, college, onSuccess, onBack }) {
   const [confetti, setConfetti] = useState(false);
   const [failReason, setFail] = useState('');
   const { total } = orderData;
+  
+  usePreventExit('/cart');
+  useConfirmExit('Are you sure? Your payment will be cancelled.');
 
   const METHODS = [
     { 

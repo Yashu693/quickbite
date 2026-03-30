@@ -190,8 +190,6 @@ export const PrivacySecurity = ({ user, close, addToast, onLogout }) => {
           <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--txt)' }}>{auth.currentUser?.providerData?.[0]?.providerId === 'password' ? 'Email / Password' : auth.currentUser?.providerData?.[0]?.providerId || 'Unknown'}</span>
         </div>
       </div>
-      
-      <button onClick={close} className="press" style={{ width: '100%', marginTop: 20, padding: '14px', borderRadius: 16, border: '1px solid var(--bdr)', background: 'transparent', color: 'var(--sub)', fontWeight: 700, fontSize: 14, cursor: 'pointer' }}>Close</button>
     </>
   );
 };

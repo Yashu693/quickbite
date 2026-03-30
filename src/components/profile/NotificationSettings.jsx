@@ -70,8 +70,6 @@ export const NotificationSettings = ({ user, close, addToast }) => {
             </div>
           </div>
         ))}
-      </div>
-      <button onClick={close} className="press" style={{ width: '100%', padding: '15px', borderRadius: 16, border: 'none', background: 'linear-gradient(135deg,#FF6B35,#FF3D60)', color: '#fff', fontWeight: 800, fontSize: 14, cursor: 'pointer' }}>Done 👍</button>
-    </>
+      </div>    </>
   );
 };

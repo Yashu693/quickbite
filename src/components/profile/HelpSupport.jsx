@@ -112,8 +112,6 @@ export const HelpSupport = ({ close, addToast }) => {
       <a href="https://shah-yash.github.io/quickbite-marketing/" target="_blank" rel="noreferrer" className="press" style={{ display: 'block', textDecoration: 'none', width: '100%', padding: '14px', borderRadius: 14, border: '2px dashed var(--bdr)', background: 'transparent', color: 'var(--mut)', fontWeight: 700, fontSize: 13, textAlign: 'center', boxSizing: 'border-box', marginBottom: 20, cursor: 'pointer' }}>
         🌐 Visit Full Help Center
       </a>
-
-      <button onClick={close} className="press" style={{ width: '100%', padding: '14px', borderRadius: 16, border: 'none', background: 'var(--inp)', color: 'var(--txt)', fontWeight: 800, fontSize: 14, cursor: 'pointer' }}>Close</button>
     </>
   );
 };

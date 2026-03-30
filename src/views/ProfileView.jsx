@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { BottomNav } from '../components/layout/BottomNav';
+import { usePreventExit } from '../hooks';
 
 // Profile modular components
 import { ProfileHeader } from '../components/profile/ProfileHeader';
@@ -19,6 +20,8 @@ export default function ProfileView({ user, college, go, orders, onLogout, onCha
   const { dark, toggleDark } = useTheme();
   const [modal, setModal] = useState(null);
   
+  usePreventExit('/home');
+  
   const close = () => setModal(null);
 
   // Settings Definitions
@@ -32,7 +35,6 @@ export default function ProfileView({ user, college, go, orders, onLogout, onCha
     { icon: '🔔', label: 'Notifications', action: () => setModal('notifications'), chevron: true },
     { icon: '🛡️', label: 'Privacy & Security', action: () => setModal('privacy'), chevron: true },
     { icon: '❓', label: 'Help & Support', action: () => setModal('help'), chevron: true },
-    { icon: '⭐', label: 'Rate QuickBite', action: () => setModal('rate'), chevron: true },
     { icon: '💬', label: 'Send Feedback', action: () => setModal('feedback'), chevron: true },
   ];
 
@@ -63,6 +65,18 @@ export default function ProfileView({ user, college, go, orders, onLogout, onCha
           go={go} 
           addToast={addToast} 
         />
+
+        {/* PROMINENT RATE APP BANNER */}
+        <div onClick={() => setModal('rate')} className="anim-fadeUp press lift glass" style={{ animationDelay: '.05s', borderRadius: 20, padding: '18px 20px', marginBottom: 20, background: 'linear-gradient(135deg, rgba(255,107,53,0.1), rgba(255,61,96,0.1))', border: '1px solid rgba(255,107,53,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+             <div style={{ fontSize: 28, filter: 'drop-shadow(0 2px 8px rgba(255,107,53,0.4))' }}>⭐</div>
+             <div>
+                <div style={{ fontSize: 16, fontWeight: 900, color: 'var(--txt)', fontFamily: "'Sora',sans-serif", letterSpacing: -0.2 }}>Rate QuickBite</div>
+                <div style={{ fontSize: 12, color: 'var(--mut)', marginTop: 4, fontWeight: 600 }}>Enjoying the campus app?</div>
+             </div>
+          </div>
+          <div style={{ width: 38, height: 38, borderRadius: 12, background: 'linear-gradient(135deg, #FF6B35, #FF3D60)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 800, boxShadow: '0 4px 14px rgba(255,107,53,0.4)' }}>›</div>
+        </div>
 
         {/* SETTINGS GROUP */}
         <div className="anim-fadeUp glass" style={{ animationDelay: '.1s', borderRadius: 20, overflow: 'hidden', border: '1px solid var(--bdr)', marginBottom: 20 }}>
@@ -98,7 +112,13 @@ export default function ProfileView({ user, college, go, orders, onLogout, onCha
         <div className="anim-fadeIn" style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,.6)', backdropFilter: 'blur(14px)', zIndex: 200, display: 'flex', alignItems: 'flex-end' }} onClick={close}>
           <div className="anim-slideUp" style={{ width: '100%', background: 'var(--card)', borderRadius: '28px 28px 0 0', padding: '0 0 36px', maxHeight: '85vh', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
             <div style={{ width: 40, height: 4, borderRadius: 99, background: 'var(--bdr)', margin: '12px auto 0' }} />
-            <div style={{ padding: '20px 20px 0' }}>
+            
+            {/* GLOBAL MODAL BACK BUTTON */}
+            <div style={{ padding: '20px 20px 0', display: 'flex', alignItems: 'center' }}>
+               <button onClick={close} className="press" style={{ width: 40, height: 40, borderRadius: 14, border: '1px solid var(--bdr)', background: 'var(--inp)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, color: 'var(--txt)' }}>←</button>
+            </div>
+
+            <div style={{ padding: '16px 20px 0' }}>
               {modal === 'rate' && <RatingModal user={user} close={close} addToast={addToast} />}
               {modal === 'feedback' && <FeedbackModal user={user} close={close} addToast={addToast} />}
               {modal === 'notifications' && <NotificationSettings user={user} close={close} addToast={addToast} />}
