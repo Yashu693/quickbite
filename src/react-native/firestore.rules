@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // FEATURE 5 — Firestore Security Rules
+    
+    // 1. An admin (custom claim request.auth.token.admin == true) can read and write ALL documents
+    match /{document=**} {
+      allow read, write: if request.auth != null && request.auth.token.admin == true;
+    }
+
+    // 2. A logged-in user can only read/write their own users/{userId} document
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // 3. And their own users/{userId}/orders/{orderId} subcollection
+      match /orders/{orderId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+  }
+}

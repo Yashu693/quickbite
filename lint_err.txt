@@ -1,0 +1,211 @@
+
+D:\cp\quickbite\src\components\feedback\Confetti.jsx
+  5:15   error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  3 | export function Confetti({ active }) {
+  4 |   const pieces = useMemo(() => Array.from({ length: 52 }, (_, i) => ({
+> 5 |     id: i, x: Math.random() * 100,
+    |               ^^^^^^^^^^^^^ Cannot call impure function
+  6 |     color: ['#FF6B35', '#FF3D60', '#FFB300', '#22C55E', '#3B82F6', '#A855F7', '#F472B6', '#FBBF24'][Math.floor(Math.random() * 8)],
+  7 |     size: Math.random() * 9 + 5, delay: Math.random() * 2.2, dur: Math.random() * 1.2 + 1.8, isRect: Math.random() > .5,
+  8 |   })), []);                                                                                        react-hooks/purity
+  6:112  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  4 |   const pieces = useMemo(() => Array.from({ length: 52 }, (_, i) => ({
+  5 |     id: i, x: Math.random() * 100,
+> 6 |     color: ['#FF6B35', '#FF3D60', '#FFB300', '#22C55E', '#3B82F6', '#A855F7', '#F472B6', '#FBBF24'][Math.floor(Math.random() * 8)],
+    |                                                                                                                ^^^^^^^^^^^^^ Cannot call impure function
+  7 |     size: Math.random() * 9 + 5, delay: Math.random() * 2.2, dur: Math.random() * 1.2 + 1.8, isRect: Math.random() > .5,
+  8 |   })), []);
+  9 |   if (!active) return null;  react-hooks/purity
+  7:11   error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+   5 |     id: i, x: Math.random() * 100,
+   6 |     color: ['#FF6B35', '#FF3D60', '#FFB300', '#22C55E', '#3B82F6', '#A855F7', '#F472B6', '#FBBF24'][Math.floor(Math.random() * 8)],
+>  7 |     size: Math.random() * 9 + 5, delay: Math.random() * 2.2, dur: Math.random() * 1.2 + 1.8, isRect: Math.random() > .5,
+     |           ^^^^^^^^^^^^^ Cannot call impure function
+   8 |   })), []);
+   9 |   if (!active) return null;
+  10 |   return (                                                                                                                                                            react-hooks/purity
+  7:41   error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+   5 |     id: i, x: Math.random() * 100,
+   6 |     color: ['#FF6B35', '#FF3D60', '#FFB300', '#22C55E', '#3B82F6', '#A855F7', '#F472B6', '#FBBF24'][Math.floor(Math.random() * 8)],
+>  7 |     size: Math.random() * 9 + 5, delay: Math.random() * 2.2, dur: Math.random() * 1.2 + 1.8, isRect: Math.random() > .5,
+     |                                         ^^^^^^^^^^^^^ Cannot call impure function
+   8 |   })), []);
+   9 |   if (!active) return null;
+  10 |   return (                                                                                                                              react-hooks/purity
+  7:67   error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+   5 |     id: i, x: Math.random() * 100,
+   6 |     color: ['#FF6B35', '#FF3D60', '#FFB300', '#22C55E', '#3B82F6', '#A855F7', '#F472B6', '#FBBF24'][Math.floor(Math.random() * 8)],
+>  7 |     size: Math.random() * 9 + 5, delay: Math.random() * 2.2, dur: Math.random() * 1.2 + 1.8, isRect: Math.random() > .5,
+     |                                                                   ^^^^^^^^^^^^^ Cannot call impure function
+   8 |   })), []);
+   9 |   if (!active) return null;
+  10 |   return (                                                                                                    react-hooks/purity
+  7:102  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+   5 |     id: i, x: Math.random() * 100,
+   6 |     color: ['#FF6B35', '#FF3D60', '#FFB300', '#22C55E', '#3B82F6', '#A855F7', '#F472B6', '#FBBF24'][Math.floor(Math.random() * 8)],
+>  7 |     size: Math.random() * 9 + 5, delay: Math.random() * 2.2, dur: Math.random() * 1.2 + 1.8, isRect: Math.random() > .5,
+     |                                                                                                      ^^^^^^^^^^^^^ Cannot call impure function
+   8 |   })), []);
+   9 |   if (!active) return null;
+  10 |   return (                                                                 react-hooks/purity
+
+D:\cp\quickbite\src\components\layout\AuthGuard.jsx
+  12:9  warning  The 'config' logical expression could make the dependencies of useEffect Hook (at line 34) change on every render. To fix this, wrap the initialization of 'config' in its own useMemo() Hook  react-hooks/exhaustive-deps
+
+D:\cp\quickbite\src\components\layout\NetworkBanner.jsx
+  6:18  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  4 |   const [show, setShow] = useState(!online);
+  5 |   useEffect(() => {
+> 6 |     if (!online) setShow(true);
+    |                  ^^^^^^^ Avoid calling setState() directly within an effect
+  7 |     else { const t = setTimeout(() => setShow(false), 2200); return () => clearTimeout(t); }
+  8 |   }, [online]);
+  9 |   if (!show) return null;  react-hooks/set-state-in-effect
+
+D:\cp\quickbite\src\components\payment\CircularTimer.jsx
+  3:61  error  'completedIn' is defined but never used  no-unused-vars
+
+D:\cp\quickbite\src\components\profile\FeedbackModal.jsx
+  40:14  error  'e' is defined but never used  no-unused-vars
+
+D:\cp\quickbite\src\components\profile\NotificationSettings.jsx
+  38:14  error  'e' is defined but never used  no-unused-vars
+
+D:\cp\quickbite\src\components\profile\PrivacySecurity.jsx
+   7:35  error  'user' is defined but never used  no-unused-vars
+  29:14  error  'e' is defined but never used     no-unused-vars
+  55:14  error  'e' is defined but never used     no-unused-vars
+
+D:\cp\quickbite\src\components\profile\ProfileHeader.jsx
+   5:10  error  'auth' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  50:14  error  'err' is defined but never used                                              no-unused-vars
+  63:13  error  'e' is defined but never used                                                no-unused-vars
+  74:13  error  'e' is defined but never used                                                no-unused-vars
+
+D:\cp\quickbite\src\components\profile\RatingModal.jsx
+  45:14  error  'e' is defined but never used  no-unused-vars
+
+D:\cp\quickbite\src\components\profile\SavedAddresses.jsx
+  40:13  error  'e' is defined but never used  no-unused-vars
+  53:13  error  'e' is defined but never used  no-unused-vars
+  53:16  error  Empty block statement          no-empty
+  61:13  error  'e' is defined but never used  no-unused-vars
+  61:16  error  Empty block statement          no-empty
+
+D:\cp\quickbite\src\context\ThemeContext.jsx
+  13:7   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  11 |     const savedDark = DB.get('quickbite_theme');
+  12 |     if (savedDark !== null) {
+> 13 |       setDark(savedDark);
+     |       ^^^^^^^ Avoid calling setState() directly within an effect
+  14 |     } else {
+  15 |       // Fallback to legacy key if it exists
+  16 |       const legacyDark = DB.get('dark');  react-hooks/set-state-in-effect
+  56:17  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    react-refresh/only-export-components
+
+D:\cp\quickbite\src\hooks\useLocalStorage.js
+  1:20  error  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+D:\cp\quickbite\src\react-native\CanteenDashboard.js
+  17:8   error  'error' is defined but never used  no-unused-vars
+  38:14  error  'error' is defined but never used  no-unused-vars
+
+D:\cp\quickbite\src\react-native\CollegePickerScreen.js
+  40:14  error  'error' is defined but never used  no-unused-vars
+
+D:\cp\quickbite\src\react-native\OrderConfirmScreen.js
+  33:14  error  'error' is defined but never used  no-unused-vars
+
+D:\cp\quickbite\src\router.js
+  36:7  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  34 |
+  35 |     if (routeName !== currentRoute) {
+> 36 |       setCurrentRoute(routeName);
+     |       ^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  37 |     }
+  38 |   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  39 |  react-hooks/set-state-in-effect
+
+D:\cp\quickbite\src\services\userService.js
+  1:33  error  'updateDoc' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+D:\cp\quickbite\src\utils\helpers.js
+  10:81  error  Empty block statement  no-empty
+  11:62  error  Empty block statement  no-empty
+
+D:\cp\quickbite\src\views\AdminDashboardView.jsx
+  28:14  error  'e' is defined but never used  no-unused-vars
+
+D:\cp\quickbite\src\views\CartView.jsx
+  7:36  error  'user' is defined but never used  no-unused-vars
+
+D:\cp\quickbite\src\views\HomeView.jsx
+  216:60  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  214 |         const maxMins = pendingOrder.items ? Math.max(...pendingOrder.items.map(i => i.time || 5)) : 5;
+  215 |         const maxSecs = maxMins * 9;
+> 216 |         const passedSecs = pendingOrder.date ? Math.floor((Date.now() - new Date(pendingOrder.date).getTime()) / 1000) : Infinity;
+      |                                                            ^^^^^^^^^^ Cannot call impure function
+  217 |         if (passedSecs >= maxSecs + 3) return false; // timer finished
+  218 |
+  219 |         return (  react-hooks/purity
+
+D:\cp\quickbite\src\views\LoginView.jsx
+  23:37  error  'onLogin' is defined but never used  no-unused-vars
+
+D:\cp\quickbite\src\views\TrackingView.jsx
+  13:24  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  11 |   const passedSecs = useMemo(() => {
+  12 |     if (!order?.date) return 0;
+> 13 |     return Math.floor((Date.now() - new Date(order.date).getTime()) / 1000);
+     |                        ^^^^^^^^^^ Cannot call impure function
+  14 |   }, [order]);
+  15 |
+  16 |   const [stage, setStage] = useState(passedSecs >= (maxPrepSecs + 3) ? 3 : passedSecs > 3 ? 2 : passedSecs > 1 ? 1 : 0);  react-hooks/purity
+
+✖ 40 problems (39 errors, 1 warning)
+

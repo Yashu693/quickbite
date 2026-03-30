@@ -1,0 +1,813 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   COLLEGE SELECT VIEW — Premium Glassmorphism
+   Deep Navy / Indigo Theme
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LAYER 0: Rich Animated Gradient Background
+   ══════════════════════════════════════════════════════════════════════════ */
+.cs {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* Deep navy — rich, not flat black */
+  background: #080d24;
+  isolation: isolate;
+}
+
+/* Mesh gradient base — gives glass something to refract */
+.cs__bg {
+  position: absolute;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 30%, rgba(80, 60, 220, 0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 80% 70%, rgba(50, 30, 180, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 70% 40% at 50% 50%, rgba(100, 80, 255, 0.06) 0%, transparent 60%);
+  animation: csBgDrift 25s ease-in-out infinite alternate;
+}
+
+/* Floating orbs — atmospheric depth, gives glass real refraction content */
+.cs__orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(80px);
+  -webkit-filter: blur(80px);
+  opacity: 0;
+  animation: csOrbFadeIn 2s ease forwards, csOrbDrift 18s ease-in-out infinite alternate;
+}
+
+.cs__orb--1 {
+  top: -8%;
+  left: -5%;
+  width: 55vw; height: 55vw;
+  background: rgba(90, 60, 255, 0.20);
+  animation-delay: 0s, 0s;
+}
+.cs__orb--2 {
+  bottom: -15%;
+  right: -8%;
+  width: 50vw; height: 50vw;
+  background: rgba(60, 30, 200, 0.16);
+  animation-delay: 0.3s, -4s;
+}
+.cs__orb--3 {
+  top: 35%;
+  left: 55%;
+  width: 40vw; height: 40vw;
+  background: rgba(120, 80, 255, 0.12);
+  animation-delay: 0.6s, -8s;
+}
+.cs__orb--4 {
+  bottom: 25%;
+  left: -12%;
+  width: 45vw; height: 45vw;
+  background: rgba(70, 40, 220, 0.14);
+  animation-delay: 0.9s, -12s;
+}
+.cs__orb--5 {
+  top: 10%;
+  right: -10%;
+  width: 35vw; height: 35vw;
+  background: rgba(100, 70, 240, 0.10);
+  animation-delay: 1.2s, -6s;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LAYER 1: Atmospheric blur overlay — calms background, creates depth
+   ══════════════════════════════════════════════════════════════════════════ */
+.cs__blur-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  background: rgba(8, 13, 36, 0.25);
+  pointer-events: none;
+}
+
+/* ── Scrollable content zone ───────────────────────────────────────────── */
+.cs__scroll {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.cs__scroll::-webkit-scrollbar { display: none; }
+
+.cs__content {
+  padding: 48px 18px 20px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Header
+   ══════════════════════════════════════════════════════════════════════════ */
+.cs__header {
+  text-align: center;
+  margin-bottom: 28px;
+  animation: csFadeUp 0.6s cubic-bezier(0.2, 0.8, 0.4, 1) both;
+}
+
+.cs__header-icon {
+  font-size: 42px;
+  margin-bottom: 12px;
+  animation: csFloat 3.5s ease-in-out infinite;
+  display: inline-block;
+}
+
+.cs__header-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: -0.8px;
+  font-family: 'Sora', sans-serif;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.cs__header-sub {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.60);
+  font-weight: 500;
+}
+
+.cs__header-hint {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  margin-top: 4px;
+  letter-spacing: 0.3px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LAYER 2: College Card Grid
+   ══════════════════════════════════════════════════════════════════════════ */
+.cs__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 13px;
+  margin-bottom: 24px;
+}
+
+/* ── Glass Card — Physical glass surface ──────────────────────────────── */
+.cs__card {
+  position: relative;
+  padding: 18px 14px;
+  border-radius: 24px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  contain: layout style paint;
+  transform: translateZ(0);
+  will-change: transform, box-shadow;
+
+  /* Deep navy glass — semi-transparent with blue tint */
+  background: rgba(20, 28, 70, 0.55);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+
+  /* Layered shadow for depth */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 10px 40px rgba(0, 0, 0, 0.25),
+    0 20px 60px rgba(0, 0, 0, 0.12);
+
+  /* Glass edge border — subtle indigo tint */
+  border: 1px solid rgba(100, 120, 255, 0.12);
+
+  /* Transition */
+  transition:
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s ease,
+    border-color 0.3s ease,
+    background 0.3s ease;
+
+  /* Stagger entrance — "glass settling" effect */
+  animation: csCardEntrance 0.55s cubic-bezier(0.2, 0.8, 0.4, 1) both;
+}
+
+/* Radial tint overlay — mimics directional light source */
+.cs__card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background: radial-gradient(
+    ellipse 100% 100% at 30% 20%,
+    rgba(100, 120, 255, 0.04) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Hover — glass lifts, blur intensifies, shadow deepens */
+.cs__card:hover:not(.cs__card--locked) {
+  transform: translateY(-3px) scale(1.02) translateZ(0);
+  background: rgba(25, 35, 85, 0.60);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  border-color: rgba(100, 120, 255, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    0 14px 48px rgba(0, 0, 0, 0.32),
+    0 24px 70px rgba(0, 0, 0, 0.14);
+}
+
+/* Active/pressed — glass compresses */
+.cs__card:active:not(.cs__card--locked) {
+  transform: scale(0.96) translateZ(0) !important;
+  transition-duration: 0.08s;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Selected State — elevated glass with accent glow
+   ══════════════════════════════════════════════════════════════════════════ */
+.cs__card--selected {
+  background: rgba(30, 40, 100, 0.65);
+  border-color: rgba(100, 120, 255, 0.55);
+  transform: scale(1.03) translateZ(0);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 12px 44px rgba(80, 80, 255, 0.12),
+    0 20px 60px rgba(0, 0, 0, 0.20),
+    0 0 0 1px rgba(100, 100, 255, 0.15);
+  animation: csCardEntrance 0.55s cubic-bezier(0.2, 0.8, 0.4, 1) both,
+             csBorderGlow 2.5s ease-in-out infinite;
+}
+
+/* Cool tint on selected — directional light picks up accent color */
+.cs__card--selected::before {
+  background: radial-gradient(
+    ellipse 100% 100% at 30% 20%,
+    rgba(100, 100, 255, 0.08) 0%,
+    transparent 60%
+  );
+}
+
+.cs__card--selected:hover {
+  transform: scale(1.03) translateZ(0);
+  border-color: rgba(100, 120, 255, 0.65);
+}
+
+/* ── Unselected dimming (atmospheric perspective) ──────────────────────── */
+.cs__card--dimmed {
+  opacity: 0.55;
+  transform: scale(0.98) translateZ(0);
+}
+.cs__card--dimmed:hover {
+  opacity: 0.85;
+  transform: translateY(-2px) scale(1.01) translateZ(0);
+}
+
+/* ── Locked state ──────────────────────────────────────────────────────── */
+.cs__card--locked {
+  cursor: not-allowed;
+  opacity: 0.40;
+  background: rgba(15, 20, 50, 0.40);
+  border-color: rgba(100, 120, 255, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Card Inner Elements
+   ══════════════════════════════════════════════════════════════════════════ */
+.cs__card-icon {
+  position: relative;
+  z-index: 1;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 10px;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.cs__card:hover:not(.cs__card--locked) .cs__card-icon {
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  transform: translateY(-1px);
+}
+
+.cs__card--locked .cs__card-icon {
+  filter: grayscale(0.7);
+}
+
+.cs__card-name {
+  position: relative;
+  z-index: 1;
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.95);
+  font-family: 'Sora', sans-serif;
+  line-height: 1.25;
+  margin-bottom: 3px;
+  letter-spacing: 0.2px;
+}
+
+.cs__card--locked .cs__card-name {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.cs__card-full {
+  position: relative;
+  z-index: 1;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.50);
+  font-weight: 500;
+  margin-bottom: 6px;
+  letter-spacing: 0.2px;
+}
+
+.cs__card-area {
+  position: relative;
+  z-index: 1;
+  font-size: 9.5px;
+  color: rgba(255, 255, 255, 0.38);
+  letter-spacing: 0.3px;
+}
+
+/* ── Checkmark badge ───────────────────────────────────────────────────── */
+.cs__check {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366F1, #4F46E5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.50);
+  z-index: 3;
+  animation: csCheckPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* ── Locked overlay badge ──────────────────────────────────────────────── */
+.cs__locked-badge {
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 12px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.cs__locked-pill {
+  background: rgba(239, 68, 68, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 99px;
+  padding: 3px 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cs__locked-pill span:first-child {
+  font-size: 8.5px;
+}
+
+.cs__locked-pill span:last-child {
+  font-size: 8.5px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.3px;
+}
+
+/* ── Empty state prompt ────────────────────────────────────────────────── */
+.cs__empty {
+  text-align: center;
+  padding: 10px 0 20px;
+  animation: csFadeUp 0.6s cubic-bezier(0.2, 0.8, 0.4, 1) 0.4s both;
+}
+
+.cs__empty-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(20, 28, 70, 0.40);
+  border: 1px solid rgba(100, 120, 255, 0.12);
+  border-radius: 99px;
+  padding: 11px 22px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.cs__empty-icon {
+  font-size: 14px;
+  animation: csBounceHand 1.8s ease infinite;
+}
+
+.cs__empty-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.2px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LAYER 3+4: Sticky CTA Footer
+   ══════════════════════════════════════════════════════════════════════════ */
+.cs__footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  pointer-events: none;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cs__footer--visible {
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Gradient fade — seamless transition into footer */
+.cs__footer-fade {
+  height: 40px;
+  background: linear-gradient(to top, #080d24 0%, transparent 100%);
+  pointer-events: none;
+}
+
+/* ── LAYER 3: Info panel — stronger glass, higher hierarchy ────────────── */
+.cs__footer-body {
+  position: relative;
+  background: rgba(12, 18, 50, 0.80);
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  border-top: 1px solid rgba(100, 120, 255, 0.15);
+  padding: 16px 18px calc(env(safe-area-inset-bottom, 12px) + 16px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 -10px 40px rgba(0, 0, 0, 0.30),
+    0 -20px 60px rgba(0, 0, 0, 0.12);
+  contain: layout style paint;
+  transform: translateZ(0);
+}
+
+/* Cool radial tint on footer glass */
+.cs__footer-body::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 100% at 30% 50%, rgba(80, 60, 220, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 100% at 80% 50%, rgba(60, 40, 200, 0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* ── Selected college info row ─────────────────────────────────────────── */
+.cs__info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 11px 14px;
+  border-radius: 16px;
+  background: rgba(20, 28, 70, 0.40);
+  border: 1px solid rgba(100, 120, 255, 0.10);
+  animation: csSlideUpSoft 0.35s cubic-bezier(0.2, 0.8, 0.4, 1) both;
+  position: relative;
+  z-index: 1;
+}
+
+.cs__info-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.30);
+}
+
+.cs__info-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.cs__info-name {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.92);
+  font-family: 'Sora', sans-serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+
+.cs__info-meta {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.50);
+  margin-top: 2px;
+  letter-spacing: 0.2px;
+}
+
+.cs__change-btn {
+  background: rgba(100, 120, 255, 0.08);
+  border: 1px solid rgba(100, 120, 255, 0.15);
+  cursor: pointer;
+  font-size: 11px;
+  color: #818CF8;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  letter-spacing: 0.3px;
+}
+
+.cs__change-btn:hover {
+  background: rgba(100, 120, 255, 0.15);
+  border-color: rgba(100, 120, 255, 0.30);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LAYER 4: CTA Button — Solid gradient, NO glass (CTA clarity)
+   ══════════════════════════════════════════════════════════════════════════ */
+.cs__cta {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 17px 40px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: linear-gradient(135deg, #FF7B00 0%, #FF5500 100%);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  font-family: 'Sora', sans-serif;
+  cursor: pointer;
+  letter-spacing: 0.4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow:
+    0 12px 40px rgba(255, 107, 0, 0.40),
+    0 4px 12px rgba(255, 107, 0, 0.20),
+    inset 0 1px 0 rgba(255, 255, 255, 0.20);
+  transition:
+    transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Hover — button lifts, shadow intensifies */
+.cs__cta:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow:
+    0 16px 52px rgba(255, 107, 0, 0.50),
+    0 6px 16px rgba(255, 107, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* Active — button presses down, shadow collapses */
+.cs__cta:active:not(:disabled) {
+  transform: scale(0.98);
+  box-shadow:
+    0 6px 20px rgba(255, 107, 0, 0.30),
+    0 2px 8px rgba(255, 107, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  transition-duration: 0.08s;
+}
+
+.cs__cta:disabled {
+  background: linear-gradient(135deg, rgba(255, 123, 0, 0.45), rgba(255, 85, 0, 0.45));
+  cursor: not-allowed;
+  box-shadow: none;
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.cs__cta-arrow {
+  display: inline-block;
+  transition: transform 0.25s ease;
+  font-size: 14px;
+}
+
+/* Arrow slides right on hover */
+.cs__cta:hover:not(:disabled) .cs__cta-arrow {
+  transform: translateX(4px);
+}
+
+/* Loading spinner */
+.cs__spinner {
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid rgba(255, 255, 255, 0.30);
+  border-top-color: #fff;
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin 0.82s linear infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   KEYFRAMES
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes csFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* "Glass settling" — card enters + blur animates from 0 to full */
+@keyframes csCardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.96) translateZ(0);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) translateZ(0);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+  }
+}
+
+@keyframes csFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+/* Orb fade-in on page load */
+@keyframes csOrbFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Slow organic drift — living, breathing glass surfaces */
+@keyframes csOrbDrift {
+  0%   { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(5%, -4%) scale(1.05); }
+  66%  { transform: translate(-3%, 6%) scale(0.97); }
+  100% { transform: translate(4%, 2%) scale(1.02); }
+}
+
+/* Background mesh breathing */
+@keyframes csBgDrift {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  100% { transform: translate(3%, 2%) rotate(1deg); }
+}
+
+/* Selected card — accent border breathes */
+@keyframes csBorderGlow {
+  0%, 100% {
+    border-color: rgba(100, 120, 255, 0.40);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 12px 44px rgba(80, 80, 255, 0.10),
+      0 20px 60px rgba(0, 0, 0, 0.20),
+      0 0 0 1px rgba(100, 100, 255, 0.12);
+  }
+  50% {
+    border-color: rgba(100, 120, 255, 0.60);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      0 12px 44px rgba(80, 80, 255, 0.16),
+      0 20px 60px rgba(0, 0, 0, 0.20),
+      0 0 0 1px rgba(100, 100, 255, 0.22);
+  }
+}
+
+@keyframes csCheckPop {
+  0%   { transform: scale(0.3) rotate(-15deg); opacity: 0; }
+  70%  { transform: scale(1.1) rotate(2deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+@keyframes csSlideUpSoft {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes csBounceHand {
+  0%, 100% { transform: translateY(0); }
+  35%      { transform: translateY(-6px); }
+  65%      { transform: translateY(-2px); }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ACCESSIBILITY — Reduced Motion
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .cs__orb,
+  .cs__header-icon,
+  .cs__empty-icon {
+    animation: none !important;
+  }
+
+  .cs__bg {
+    animation: none !important;
+  }
+
+  .cs__card {
+    animation: csFadeIn 0.3s ease both !important;
+  }
+
+  .cs__card--selected {
+    animation: csFadeIn 0.3s ease both !important;
+  }
+
+  .cs__check {
+    animation: csFadeIn 0.2s ease both !important;
+  }
+
+  .cs__footer {
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+  }
+
+  .cs__cta:hover:not(:disabled) {
+    transform: none;
+  }
+
+  .cs__card:hover:not(.cs__card--locked) {
+    transform: translateZ(0);
+  }
+
+  @keyframes csFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   FALLBACK — No backdrop-filter support
+   ══════════════════════════════════════════════════════════════════════════ */
+@supports not (backdrop-filter: blur(1px)) {
+  .cs__card {
+    background: rgba(15, 20, 55, 0.92);
+  }
+
+  .cs__card--selected {
+    background: rgba(25, 35, 80, 0.95);
+  }
+
+  .cs__footer-body {
+    background: rgba(8, 13, 36, 0.97);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   KEYBOARD FOCUS STYLES — Accessibility
+   ══════════════════════════════════════════════════════════════════════════ */
+.cs__card:focus-visible {
+  outline: 2px solid rgba(99, 102, 241, 0.80);
+  outline-offset: 3px;
+}
+
+.cs__cta:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.80);
+  outline-offset: 3px;
+}
+
+.cs__change-btn:focus-visible {
+  outline: 2px solid rgba(99, 102, 241, 0.80);
+  outline-offset: 2px;
+}

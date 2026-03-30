@@ -1,17 +1,33 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, doc, getDoc, getDocs, setDoc, addDoc, deleteDoc, collection, collectionGroup, query, orderBy, onSnapshot, serverTimestamp, updateDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage";
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD8LN1JkjCsZov8aMuAlBBZPigzYf4te8c",
-  authDomain: "quickbite-fa414.firebaseapp.com",
-  projectId: "quickbite-fa414",
-  storageBucket: "quickbite-fa414.firebasestorage.app",
-  messagingSenderId: "662907773845",
-  appId: "1:662907773845:web:d733dabb823e3f77f88c9c"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Firestore database
+// Initialize App Check (requires VITE_RECAPTCHA_SITE_KEY in .env.local)
+if (import.meta.env.VITE_RECAPTCHA_SITE_KEY) {
+  initializeAppCheck(app, {
+    provider: new ReCaptchaEnterpriseProvider(import.meta.env.VITE_RECAPTCHA_SITE_KEY),
+    isTokenAutoRefreshEnabled: true
+  });
+} else {
+  console.warn("Firebase App Check not initialized: VITE_RECAPTCHA_SITE_KEY is missing from .env.local");
+}
+
+// Auth, Firestore & Storage
+export const auth = getAuth(app);
 export const db = getFirestore(app);
+export const storage = getStorage(app);
+export { doc, getDoc, getDocs, setDoc, addDoc, deleteDoc, collection, collectionGroup, query, orderBy, onSnapshot, serverTimestamp, updateDoc };

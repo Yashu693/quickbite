@@ -1,0 +1,14 @@
+{
+  "fieldOverrides": [
+    {
+      "collectionGroup": "orders",
+      "fieldPath": "timestamp",
+      "indexes": [
+        {
+          "order": "DESCENDING",
+          "queryScope": "COLLECTION_GROUP"
+        }
+      ]
+    }
+  ]
+}
