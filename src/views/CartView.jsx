@@ -10,13 +10,17 @@ export default function CartView({ user, college, cart, setCart, addToast, go, o
   const [couponMsg, setCouponMsg] = useState('');
   const [disc, setDisc] = useState(0);
   const [showOffers, setShowOffers] = useState(false);
+  const [fulfillment, setFulfillment] = useState('pickup');
+  const [room, setRoom] = useState('');
+  const [phone, setPhone] = useState('');
 
   usePreventExit('/home');
 
   const items = Object.entries(cart).map(([id, qty]) => { const f = resolveFoodItem(id); return f ? { ...f, qty } : null; }).filter(Boolean);
   const sub = items.reduce((s, i) => s + i.price * i.qty, 0);
   const dk = Math.round(sub * (disc / 100));
-  const total = sub + PREP_FEE - dk;
+  const deliveryFee = fulfillment === 'delivery' ? 10 : 0;
+  const total = sub + PREP_FEE + deliveryFee - dk;
   const totalItems = items.reduce((a, b) => a + b.qty, 0);
 
   const inc = id => setCart(p => ({ ...p, [id]: (p[id] || 0) + 1 }));
@@ -148,6 +152,27 @@ export default function CartView({ user, college, cart, setCart, addToast, go, o
           <div style={{ color: 'var(--acc)', fontWeight: 800, fontSize: 18 }}>›</div>
         </div>
 
+        {/* Fulfillment Method */}
+        <div className="glass anim-fadeUp" style={{ animationDelay: '.08s', borderRadius: 18, padding: '16px', marginBottom: 14, boxShadow: '0 4px 18px var(--shadow)' }}>
+          <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--txt)', marginBottom: 14, fontFamily: "'Sora',sans-serif" }}>Fulfillment Option</div>
+          
+          <div style={{ display: 'flex', gap: 8, background: 'var(--inp)', padding: 6, borderRadius: 14, marginBottom: fulfillment === 'delivery' ? 16 : 0 }}>
+            <button onClick={() => setFulfillment('pickup')} className={fulfillment === 'pickup' ? 'press lift' : 'press'} style={{ flex: 1, padding: '10px', borderRadius: 10, border: 'none', background: fulfillment === 'pickup' ? 'var(--surface)' : 'transparent', color: fulfillment === 'pickup' ? 'var(--txt)' : 'var(--sub)', fontWeight: 800, fontSize: 13, transition: 'all .2s', boxShadow: fulfillment === 'pickup' ? '0 2px 8px var(--shadow)' : 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+              🏪 Pickup
+            </button>
+            <button onClick={() => setFulfillment('delivery')} className={fulfillment === 'delivery' ? 'press lift' : 'press'} style={{ flex: 1, padding: '10px', borderRadius: 10, border: 'none', background: fulfillment === 'delivery' ? 'var(--surface)' : 'transparent', color: fulfillment === 'delivery' ? 'var(--txt)' : 'var(--sub)', fontWeight: 800, fontSize: 13, transition: 'all .2s', boxShadow: fulfillment === 'delivery' ? '0 2px 8px var(--shadow)' : 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+              🛵 Delivery
+            </button>
+          </div>
+
+          {fulfillment === 'delivery' && (
+            <div className="anim-fadeIn" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <input value={room} onChange={e => setRoom(e.target.value)} placeholder="Hostel Block & Room No. (e.g. B-102)" style={{ padding: '14px', borderRadius: 12, border: '1px solid var(--bdr)', background: 'var(--inp)', color: 'var(--txt)', fontSize: 13, outline: 'none' }} />
+              <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="Phone Number" style={{ padding: '14px', borderRadius: 12, border: '1px solid var(--bdr)', background: 'var(--inp)', color: 'var(--txt)', fontSize: 13, outline: 'none' }} />
+            </div>
+          )}
+        </div>
+
         {/* Bill */}
         <div className="glass anim-fadeUp" style={{ animationDelay: '.1s', borderRadius: 18, padding: '16px', marginBottom: 14, boxShadow: '0 4px 18px var(--shadow)' }}>
           <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--txt)', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 7, fontFamily: "'Sora',sans-serif" }}>
@@ -161,6 +186,12 @@ export default function CartView({ user, college, cart, setCart, addToast, go, o
             <span style={{ fontSize: 12.5, color: 'var(--sub)' }}>Canteen Prep Fee</span>
             <span style={{ fontSize: 12.5, color: 'var(--txt)', fontWeight: 600 }}>₹{PREP_FEE}</span>
           </div>
+          {deliveryFee > 0 && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 9 }}>
+              <span style={{ fontSize: 12.5, color: 'var(--sub)' }}>Delivery Fee</span>
+              <span style={{ fontSize: 12.5, color: 'var(--txt)', fontWeight: 600 }}>₹{deliveryFee}</span>
+            </div>
+          )}
           {dk > 0 && (
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 9 }}>
               <span style={{ fontSize: 12.5, color: 'var(--grn)' }}>Discount Applied</span>
@@ -179,13 +210,17 @@ export default function CartView({ user, college, cart, setCart, addToast, go, o
           <div style={{ width: 34, height: 34, borderRadius: 11, background: 'rgba(34,197,94,.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, flexShrink: 0 }}>🎉</div>
           <div>
             <div style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--grn)' }}>No hidden charges!</div>
-            <div style={{ fontSize: 10.5, color: 'var(--grn)', marginTop: 1, opacity: .8 }}>All taxes included · Free canteen pickup</div>
+            <div style={{ fontSize: 10.5, color: 'var(--grn)', marginTop: 1, opacity: .8 }}>All taxes included · {fulfillment === 'delivery' ? 'Direct to your room' : 'Free canteen pickup'}</div>
           </div>
         </div>
 
         {/* Swipe to pay */}
         <div className="anim-fadeUp" style={{ animationDelay: '.16s', marginBottom: 14 }}>
-          <SwipeToPay total={total} onPay={() => onGoToPay({ items, sub, fee: PREP_FEE, dk, total })} />
+          {fulfillment === 'delivery' && (room.trim().length === 0 || phone.trim().length === 0) ? (
+            <button className="press" disabled style={{ width: '100%', padding: '16px', borderRadius: 18, border: 'none', background: 'var(--bdr)', color: 'var(--mut)', fontWeight: 800, fontSize: 16 }}>Enter Delivery Form First</button>
+          ) : (
+            <SwipeToPay total={total} onPay={() => onGoToPay({ items, sub, fee: PREP_FEE, dk, deliveryFee, total, fulfillment, room, phone })} />
+          )}
         </div>
 
       </div>

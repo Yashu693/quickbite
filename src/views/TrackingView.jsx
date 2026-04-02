@@ -2,8 +2,9 @@ import { useState, useEffect, useMemo } from 'react';
 import { fmtSecs } from '../utils/helpers';
 import { CircularTimer } from '../components/payment/CircularTimer';
 import { usePreventExit, useConfirmExit } from '../hooks';
+import { RatingModal } from '../components/profile/RatingModal';
 
-export default function TrackingView({ order, onDone, onViewReceipt, addToast }) {
+export default function TrackingView({ user, order, onDone, onViewReceipt, addToast }) {
   const maxPrepSecs = useMemo(() => {
     if (!order?.items || order.items.length === 0) return 64;
     return Math.max(...order.items.map(i => i.time || 5)) * 9;
@@ -22,6 +23,18 @@ export default function TrackingView({ order, onDone, onViewReceipt, addToast })
   const [elapsed, setEl] = useState(passedSecs);
   const [notified, setNotif] = useState(passedSecs >= (maxPrepSecs + 3));
   const [completedIn, setDoneIn] = useState(passedSecs >= (maxPrepSecs + 3) ? maxPrepSecs + 3 : null);
+  const [showRating, setShowRating] = useState(false);
+
+  const handleDone = () => {
+    if (stage >= 3) {
+      const hasRated = localStorage.getItem('qb_has_rated');
+      if (!hasRated) {
+        setShowRating(true);
+        return;
+      }
+    }
+    onDone();
+  };
 
   useEffect(() => {
     if (stage >= 3) return;
@@ -57,20 +70,28 @@ export default function TrackingView({ order, onDone, onViewReceipt, addToast })
     { icon: '📋', label: 'Order Received', detail: 'Canteen has your order!', time: 'Just now', done: true },
     { icon: '✅', label: 'Payment Confirmed', detail: `₹${order?.total || 0} — ${order?.payMethod || 'paid successfully'}`, time: '', done: stage >= 1 },
     { icon: '👨‍🍳', label: "Chef is Cooking", detail: '"Almost there... don\'t get hungry 😄"', time: stage === 2 ? fmtSecs(elapsed) : '', done: stage >= 3, active: stage === 2 },
-    { icon: '🎯', label: 'Ready for Pickup', detail: `Counter B · ${order?.token || 'QB42'}`, time: completedIn ? `Done in ${fmtSecs(completedIn)}` : '', done: stage >= 3 },
+    { icon: order?.fulfillment === 'delivery' ? '🛵' : '🎯', label: order?.fulfillment === 'delivery' ? 'Out for Delivery' : 'Ready for Pickup', detail: order?.fulfillment === 'delivery' ? `Arriving to ${order?.room || 'your room'}` : `Counter B · ${order?.token || 'QB42'}`, time: completedIn ? `Done in ${fmtSecs(completedIn)}` : '', done: stage >= 3 },
   ];
 
   return (
     <div style={{ position: 'absolute', inset: 0, background: 'var(--bg)', display: 'flex', flexDirection: 'column' }}>
+      {showRating && (
+        <div className="anim-fadeIn" style={{ position: 'absolute', inset: 0, zIndex: 100, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+          <div className="anim-scaleIn glass" style={{ width: '100%', maxWidth: 400, borderRadius: 28, padding: '24px', position: 'relative' }}>
+            <button onClick={() => { localStorage.setItem('qb_has_rated', 'true'); onDone(); }} className="press" style={{ position: 'absolute', top: 18, right: 18, background: 'var(--surface2)', border: 'none', color: 'var(--mut)', width: 32, height: 32, borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>✕</button>
+            <RatingModal user={user} addToast={addToast} close={() => { localStorage.setItem('qb_has_rated', 'true'); onDone(); }} />
+          </div>
+        </div>
+      )}
       <div className="glass-hdr" style={{ padding: '38px 16px 14px', flexShrink: 0 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <div style={{ fontSize: 9.5, color: 'var(--acc)', fontWeight: 700, letterSpacing: .5, marginBottom: 2 }}>📍 {order?.canteen || 'Campus Canteen'}</div>
             <div style={{ fontSize: 20, fontWeight: 900, color: 'var(--txt)', fontFamily: "'Sora',sans-serif" }}>Live Tracking 📍</div>
           </div>
-          <div className="glass" style={{ borderRadius: 13, padding: '6px 13px' }}>
-            <div style={{ fontSize: 9, color: 'var(--mut)', fontWeight: 600, letterSpacing: .4 }}>ORDER</div>
-            <div style={{ fontSize: 12.5, fontWeight: 800, color: 'var(--acc)' }}>{order?.id || 'QB-0000'}</div>
+          <div className="glass" style={{ borderRadius: 13, padding: '6px 13px', textAlign: 'center' }}>
+            <div style={{ fontSize: 9, color: 'var(--mut)', fontWeight: 600, letterSpacing: .4 }}>ORDER TOKEN</div>
+            <div style={{ fontSize: 13.5, fontWeight: 800, color: 'var(--acc)' }}>{order?.token || 'QB42'}</div>
           </div>
         </div>
       </div>
@@ -83,13 +104,13 @@ export default function TrackingView({ order, onDone, onViewReceipt, addToast })
               {stage === 0 ? 'Order Received! 📋' : stage === 1 ? 'Payment Confirmed ✅' : stage === 2 ? 'Cooking with love ❤️' : 'Order Ready! 🎉'}
             </div>
             <div style={{ fontSize: 12, color: 'var(--sub)' }}>
-              {stage === 2 ? `Est. ~${estMins} min · Prep started` : stage >= 3 ? `Collected at Counter B · Token ${order?.token || ''}` : ''}
+              {stage === 2 ? `Est. ~${estMins} min · Prep started` : stage >= 3 ? (order?.fulfillment === 'delivery' ? `On the way to ${order?.room}` : `Collected at Counter B · Token ${order?.token || ''}`) : ''}
             </div>
           </div>
           {stage >= 3 && completedIn && (
             <div className="anim-popIn" style={{ marginTop: 14, background: 'rgba(34,197,94,.1)', border: '1px solid rgba(34,197,94,.25)', borderRadius: 14, padding: '10px 16px', textAlign: 'center' }}>
               <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--grn)' }}>✅ Completed in {fmtSecs(completedIn)}</div>
-              <div style={{ fontSize: 10.5, color: 'var(--mut)', marginTop: 2 }}>Show token {order?.token || ''} at Counter B</div>
+              <div style={{ fontSize: 10.5, color: 'var(--mut)', marginTop: 2 }}>{order?.fulfillment === 'delivery' ? 'Food is arriving shortly!' : `Show token ${order?.token || ''} at Counter B`}</div>
             </div>
           )}
           {stage === 2 && (
@@ -138,7 +159,7 @@ export default function TrackingView({ order, onDone, onViewReceipt, addToast })
         </div>
         <div style={{ display: 'flex', gap: 10, marginBottom: 24 }}>
           <button onClick={onViewReceipt} className="press glass" style={{ flex: 1, padding: '14px', borderRadius: 16, border: '1px solid var(--bdr)', color: 'var(--sub)', fontSize: 13, fontWeight: 700, cursor: 'pointer', background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}>🧾 View Receipt</button>
-          <button onClick={onDone} className="press" style={{ flex: 2, padding: '14px', borderRadius: 16, border: 'none', background: stage >= 3 ? 'linear-gradient(135deg,#22C55E,#16A34A)' : 'linear-gradient(135deg,#FF6B35,#FF3D60)', color: '#fff', fontSize: 13.5, fontWeight: 800, cursor: 'pointer', boxShadow: stage >= 3 ? '0 8px 28px rgba(34,197,94,.4)' : '0 6px 24px rgba(255,107,53,.38)', transition: 'all .5s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+          <button onClick={handleDone} className="press" style={{ flex: 2, padding: '14px', borderRadius: 16, border: 'none', background: stage >= 3 ? 'linear-gradient(135deg,#22C55E,#16A34A)' : 'linear-gradient(135deg,#FF6B35,#FF3D60)', color: '#fff', fontSize: 13.5, fontWeight: 800, cursor: 'pointer', boxShadow: stage >= 3 ? '0 8px 28px rgba(34,197,94,.4)' : '0 6px 24px rgba(255,107,53,.38)', transition: 'all .5s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
             {stage >= 3 ? '🏠 Go Home' : '← Back to Home'}
           </button>
         </div>

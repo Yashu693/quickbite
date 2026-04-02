@@ -143,6 +143,10 @@ export default function App() {
           totalPrice: payData.total,
           college: college?.name || 'Unknown',
           status: 'pending',
+          fulfillment: payData.fulfillment || 'pickup',
+          room: payData.room || '',
+          phone: payData.phone || '',
+          deliveryFee: payData.deliveryFee || 0,
           timestamp: serverTimestamp()
         });
         orderId = docRef.id;
@@ -153,6 +157,8 @@ export default function App() {
       id: orderId, date: new Date(),
       items: finalItems,
       sub: payData.sub, fee: payData.fee, dk: payData.dk, total: payData.total,
+      deliveryFee: payData.deliveryFee || 0, fulfillment: payData.fulfillment || 'pickup',
+      room: payData.room || '', phone: payData.phone || '',
       college: college?.short || 'Campus', canteen: college?.canteen || 'Campus Canteen',
       status: 'pending', token: randToken(), payMethod: payData.payMethod || 'Online Payment',
     };
@@ -185,11 +191,11 @@ export default function App() {
               <Route path="/home" element={<HomeView user={user} college={college} cart={cart} setCart={setCart} addToast={addToast} go={go} dark={dark} toggleDark={toggleDark} skeletonMode={skel} pendingOrder={pendingOrder} />} />
               <Route path="/cart" element={<CartView user={user} college={college} cart={cart} setCart={setCart} addToast={addToast} go={go} onGoToPay={onGoToPay} />} />
               <Route path="/payment" element={payData ? <PaymentView orderData={payData} college={college} onSuccess={onPayOK} onBack={() => setView('cart')} /> : <Navigate to="/cart" />} />
-              <Route path="/tracking" element={pendingOrder ? <TrackingView order={pendingOrder} onDone={() => go('home')} onViewReceipt={() => go('receipt')} addToast={addToast} /> : <Navigate to="/home" />} />
+              <Route path="/tracking" element={pendingOrder ? <TrackingView user={user} order={pendingOrder} onDone={() => go('home')} onViewReceipt={() => go('receipt')} addToast={addToast} /> : <Navigate to="/home" />} />
               <Route path="/receipt" element={pendingOrder ? <ReceiptView order={pendingOrder} onDone={() => go('tracking')} /> : <Navigate to="/home" />} />
               <Route path="/history" element={<HistoryView orders={orders} go={go} addToast={addToast} setCart={setCart} cartCount={totalCartItems} onViewTracking={viewOrder} />} />
               <Route path="/profile" element={<ProfileView user={user} college={college} dark={dark} toggleDark={toggleDark} go={go} orders={orders} onLogout={onLogout} onChangeCollege={() => setView('collegeSelect')} cartCount={totalCartItems} addToast={addToast} />} />
-              <Route path="/admin" element={<AdminDashboardView go={go} />} />
+              <Route path="/admin" element={<AdminDashboardView go={go} user={user} />} />
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           )}

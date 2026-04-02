@@ -71,11 +71,17 @@ export const RatingModal = ({ user, close, addToast }) => {
 
   return (
     <>
-      <div style={{ fontSize: 18, fontWeight: 900, color: 'var(--txt)', fontFamily: "'Sora',sans-serif", marginBottom: 6, textAlign: 'center' }}>
-        {isUpdate ? 'Update Your Rating' : 'Rate QuickBite'}
+      <div style={{ textAlign: 'center', marginBottom: 16 }}>
+        <div className="anim-popIn" style={{ fontSize: 52, marginBottom: 8, display: 'inline-block', filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.2))' }}>
+          {stars === 5 ? '🤩' : stars === 4 ? '😊' : stars === 3 ? '😐' : stars === 2 ? '😕' : stars === 1 ? '😞' : '⭐'}
+        </div>
+        <div style={{ fontSize: 20, fontWeight: 900, color: 'var(--txt)', fontFamily: "'Sora',sans-serif", marginBottom: 4 }}>
+          {isUpdate ? 'Update Your Rating' : 'How was your food?'}
+        </div>
+        <div style={{ fontSize: 12, color: 'var(--sub)' }}>Your feedback helps us improve your canteen!</div>
       </div>
       
-      <div style={{ display: 'flex', justifyContent: 'center', gap: 10, margin: '20px 0' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 12, margin: '24px 0 28px' }}>
         {[1,2,3,4,5].map(s => (
           <div 
             key={s} 
@@ -83,11 +89,11 @@ export const RatingModal = ({ user, close, addToast }) => {
             onMouseLeave={() => setHoverStar(0)} 
             onClick={() => setStars(s)}
             style={{ 
-              fontSize: 38, cursor: 'pointer', transition: 'transform 0.2s',
-              transform: (hoverStar || stars) >= s ? 'scale(1.1)' : 'scale(1)',
-              filter: (hoverStar || stars) >= s ? 'none' : 'grayscale(100%) opacity(30%)'
+              fontSize: 42, cursor: 'pointer', transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+              transform: (hoverStar || stars) === s ? 'scale(1.25) translateY(-4px)' : (hoverStar || stars) > s ? 'scale(1.1)' : 'scale(1)',
+              filter: (hoverStar || stars) >= s ? 'drop-shadow(0 4px 12px rgba(255,165,0,0.4))' : 'grayscale(100%) opacity(20%)'
             }}
-          >⭐</div>
+          >⭐️</div>
         ))}
       </div>
 
@@ -104,25 +110,28 @@ export const RatingModal = ({ user, close, addToast }) => {
         })}
       </div>
 
-      <div style={{ position: 'relative', marginBottom: 16 }}>
+      <div className="anim-fadeUp" style={{ position: 'relative', marginBottom: 20 }}>
         <textarea 
           value={reviewText} onChange={e => setReviewText(e.target.value.slice(0, 500))} 
-          placeholder="Tell us what you loved or what we can improve..." 
-          rows={4} 
-          style={{ width: '100%', boxSizing: 'border-box', padding: '14px', borderRadius: 16, border: '2px solid var(--inpB)', background: 'var(--inp)', color: 'var(--txt)', fontSize: 13, resize: 'none' }} 
+          placeholder={stars >= 4 ? "Tell us what you loved! (Optional)" : "How can we improve? (Optional)"} 
+          rows={3} 
+          style={{ width: '100%', boxSizing: 'border-box', padding: '16px', borderRadius: 20, border: '1px solid var(--bdr)', background: 'var(--inp)', color: 'var(--txt)', fontSize: 13, resize: 'none', transition: 'all .3s', outline: 'none' }}
+          onFocus={e => { e.target.style.borderColor = '#FF6B35'; e.target.style.background = 'var(--surface)'; }}
+          onBlur={e => { e.target.style.borderColor = 'var(--bdr)'; e.target.style.background = 'var(--inp)'; }}
         />
-        <div style={{ position: 'absolute', bottom: 10, right: 14, fontSize: 10, color: 'var(--mut)', fontWeight: 600 }}>
+        <div style={{ position: 'absolute', bottom: 12, right: 16, fontSize: 10, color: 'var(--mut)', fontWeight: 700 }}>
           {reviewText.length}/500
         </div>
       </div>
 
-      <button disabled={stars === 0 || submitting} onClick={submit} className="press" style={{ 
-        width: '100%', padding: '16px', borderRadius: 16, border: 'none', 
+      <button disabled={stars === 0 || submitting} onClick={submit} className={stars === 0 ? "" : "press"} style={{ 
+        width: '100%', padding: '16px', borderRadius: 18, border: 'none', 
         background: stars === 0 ? 'var(--bdr)' : 'linear-gradient(135deg,#FF6B35,#FF3D60)', 
-        color: stars === 0 ? 'var(--mut)' : '#fff', fontWeight: 800, fontSize: 14, 
-        cursor: stars === 0 ? 'not-allowed' : 'pointer', opacity: submitting ? 0.7 : 1
+        color: stars === 0 ? 'var(--mut)' : '#fff', fontWeight: 800, fontSize: 15, 
+        cursor: stars === 0 ? 'not-allowed' : 'pointer', opacity: submitting ? 0.7 : 1,
+        boxShadow: stars === 0 ? 'none' : '0 8px 24px rgba(255,107,53,0.3)'
       }}>
-        {submitting ? 'Submitting...' : (isUpdate ? 'Update Review 🚀' : 'Submit Review 🚀')}
+        {submitting ? 'Submitting...' : (isUpdate ? 'Update Review 🚀' : 'Submit Feedback 🚀')}
       </button>
     </>
   );

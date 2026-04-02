@@ -43,8 +43,10 @@ export default function HistoryView({ orders, go, addToast, setCart, cartCount =
               <div key={order.id} className="anim-fadeUp lift glass" style={{ animationDelay: `${idx * .05}s`, borderRadius: 22, overflow: 'hidden', marginBottom: 12 }}>
                 <div style={{ background: 'linear-gradient(135deg,rgba(255,107,53,.08),rgba(255,61,96,.05))', padding: '12px 16px', borderBottom: '1px solid var(--bdr)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
-                    <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--txt)', fontFamily: "'Sora',sans-serif" }}>{order.id}</div>
-                    <div style={{ fontSize: 10.5, color: 'var(--sub)', marginTop: 1 }}>{fmtDate(order.date)} · {order.college}</div>
+                    <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--txt)', fontFamily: "'Sora',sans-serif", display: 'flex', alignItems: 'center', gap: 6 }}>
+                      {order.id} {order.fulfillment === 'delivery' && <span style={{ background: 'rgba(77,158,255,.15)', color: 'var(--blue)', padding: '2px 6px', borderRadius: 6, fontSize: 10 }}>🛵 Delivery</span>}
+                    </div>
+                    <div style={{ fontSize: 10.5, color: 'var(--sub)', marginTop: 2 }}>{fmtDate(order.date)} · {order.fulfillment === 'delivery' ? `Delivery to ${order.room || 'Room'}` : `Pickup at ${order.college}`}</div>
                   </div>
                   <div style={{ background: 'rgba(34,197,94,.1)', color: 'var(--grn)', fontSize: 10.5, fontWeight: 700, padding: '4px 11px', borderRadius: 99, border: '1px solid rgba(34,197,94,.2)' }}>✓ {order.status}</div>
                 </div>

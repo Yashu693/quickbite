@@ -5,8 +5,12 @@ service cloud.firestore {
     
     // Admin Global Read/Write Access
     match /{document=**} {
-      // Allows any user with a custom 'admin' token to do anything
-      allow read, write: if request.auth != null && request.auth.token.admin == true;
+      // Allows any user with a custom 'admin' token OR the specific admin emails to do anything
+      allow read, write: if request.auth != null && (
+        request.auth.token.admin == true || 
+        request.auth.token.email == 'shahyassh1804@gmail.com' || 
+        request.auth.token.email == 'shahyash1804@gmail.com'
+      );
     }
 
     // Default Deny All (Strict security baseline) for non-admins
