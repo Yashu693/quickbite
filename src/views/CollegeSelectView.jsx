@@ -275,10 +275,20 @@ export default function CollegeSelectView({ user, onSelect }) {
             style={{ position: 'absolute', inset: 0, backgroundColor: '#ff5e1a', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
           >
             <motion.div 
-              animate={{ rotate: 360 }} 
-              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-              style={{ width: 60, height: 60, border: '4px solid rgba(255,255,255,0.3)', borderTopColor: '#fff', borderRadius: '50%', marginBottom: 20 }}
-            />
+              animate={{ 
+                y: [0, -25, 0],
+                scale: [1, 1.15, 0.95, 1],
+                rotate: [0, 10, -10, 0]
+              }} 
+              transition={{ 
+                duration: 1.2, 
+                repeat: Infinity, 
+                ease: "easeInOut" 
+              }}
+              style={{ fontSize: 64, marginBottom: 20, filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.2))' }}
+            >
+              🍔
+            </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
