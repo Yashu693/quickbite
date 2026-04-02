@@ -3,6 +3,7 @@ import { fmtSecs } from '../utils/helpers';
 import { CircularTimer } from '../components/payment/CircularTimer';
 import { usePreventExit, useConfirmExit } from '../hooks';
 import { RatingModal } from '../components/profile/RatingModal';
+import { motion } from 'framer-motion';
 
 export default function TrackingView({ user, order, onDone, onViewReceipt, addToast }) {
   const maxPrepSecs = useMemo(() => {
@@ -128,17 +129,26 @@ export default function TrackingView({ user, order, onDone, onViewReceipt, addTo
         <div className="glass" style={{ borderRadius: 22, padding: '16px', marginBottom: 14 }}>
           <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--txt)', marginBottom: 16, fontFamily: "'Sora',sans-serif" }}>⏱️ Order Timeline</div>
           {stages.map((s, i) => (
-            <div key={i} style={{ display: 'flex', gap: 14, marginBottom: i < stages.length - 1 ? 18 : 0, position: 'relative' }}>
+            <motion.div key={i}
+              initial={{ opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.35, delay: i * 0.1, ease: [0.25, 1, 0.5, 1] }}
+              style={{ display: 'flex', gap: 14, marginBottom: i < stages.length - 1 ? 18 : 0, position: 'relative' }}
+            >
               {i < stages.length - 1 && <div style={{ position: 'absolute', left: 17, top: 38, width: 2, height: 20, background: stages[i + 1].done || stages[i + 1].active ? 'linear-gradient(to bottom,#FF6B35,rgba(255,107,53,.2))' : 'var(--bdr)', transition: 'background .5s', borderRadius: 99 }} />}
-              <div style={{ width: 35, height: 35, borderRadius: '50%', background: s.done ? 'linear-gradient(135deg,#22C55E,#16A34A)' : s.active ? 'linear-gradient(135deg,#FF6B35,#FF3D60)' : 'var(--inp)', border: `2px solid ${s.done ? '#22C55E' : s.active ? '#FF6B35' : 'var(--bdr)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0, transition: 'all .4s', boxShadow: s.active ? '0 4px 16px rgba(255,107,53,.42)' : s.done ? '0 4px 16px rgba(34,197,94,.3)' : 'none' }}>
+              <motion.div
+                animate={s.active ? { scale: [1, 1.15, 1] } : {}}
+                transition={s.active ? { duration: 1.5, repeat: Infinity, ease: 'easeInOut' } : {}}
+                style={{ width: 35, height: 35, borderRadius: '50%', background: s.done ? 'linear-gradient(135deg,#22C55E,#16A34A)' : s.active ? 'linear-gradient(135deg,#FF6B35,#FF3D60)' : 'var(--inp)', border: `2px solid ${s.done ? '#22C55E' : s.active ? '#FF6B35' : 'var(--bdr)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0, transition: 'all .4s', boxShadow: s.active ? '0 4px 16px rgba(255,107,53,.42)' : s.done ? '0 4px 16px rgba(34,197,94,.3)' : 'none' }}
+              >
                 {s.done ? '✓' : s.icon}
-              </div>
+              </motion.div>
               <div style={{ paddingTop: 6, flex: 1 }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: s.done || s.active ? 'var(--txt)' : 'var(--mut)', transition: 'color .4s', fontFamily: "'Sora',sans-serif" }}>{s.label}</div>
                 <div style={{ fontSize: 11, color: 'var(--sub)', marginTop: 1 }}>{s.detail}</div>
                 {s.time && <div style={{ fontSize: 10, color: 'var(--acc)', fontWeight: 700, marginTop: 2 }}>{s.time}</div>}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
         <div className="glass" style={{ borderRadius: 20, padding: '14px 16px', marginBottom: 14 }}>
@@ -158,10 +168,19 @@ export default function TrackingView({ user, order, onDone, onViewReceipt, addTo
           </div>
         </div>
         <div style={{ display: 'flex', gap: 10, marginBottom: 24 }}>
-          <button onClick={onViewReceipt} className="press glass" style={{ flex: 1, padding: '14px', borderRadius: 16, border: '1px solid var(--bdr)', color: 'var(--sub)', fontSize: 13, fontWeight: 700, cursor: 'pointer', background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}>🧾 View Receipt</button>
-          <button onClick={handleDone} className="press" style={{ flex: 2, padding: '14px', borderRadius: 16, border: 'none', background: stage >= 3 ? 'linear-gradient(135deg,#22C55E,#16A34A)' : 'linear-gradient(135deg,#FF6B35,#FF3D60)', color: '#fff', fontSize: 13.5, fontWeight: 800, cursor: 'pointer', boxShadow: stage >= 3 ? '0 8px 28px rgba(34,197,94,.4)' : '0 6px 24px rgba(255,107,53,.38)', transition: 'all .5s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+          <motion.button onClick={onViewReceipt} className="press glass btn-ripple"
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+            style={{ flex: 1, padding: '14px', borderRadius: 16, border: '1px solid var(--bdr)', color: 'var(--sub)', fontSize: 13, fontWeight: 700, cursor: 'pointer', background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}
+          >🧾 View Receipt</motion.button>
+          <motion.button onClick={handleDone} className="press btn-ripple"
+            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+            style={{ flex: 2, padding: '14px', borderRadius: 16, border: 'none', background: stage >= 3 ? 'linear-gradient(135deg,#22C55E,#16A34A)' : 'linear-gradient(135deg,#FF6B35,#FF3D60)', color: '#fff', fontSize: 13.5, fontWeight: 800, cursor: 'pointer', boxShadow: stage >= 3 ? '0 8px 28px rgba(34,197,94,.4)' : '0 6px 24px rgba(255,107,53,.38)', transition: 'all .5s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+          >
             {stage >= 3 ? '🏠 Go Home' : '← Back to Home'}
-          </button>
+          </motion.button>
         </div>
       </div>
     </div>

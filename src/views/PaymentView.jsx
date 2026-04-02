@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Confetti } from '../components/feedback/Confetti';
 import { usePreventExit, useConfirmExit } from '../hooks';
+import { motion } from 'framer-motion';
 
 export default function PaymentView({ orderData, college, onSuccess, onBack }) {
   const [state, setState] = useState('methods');
@@ -62,15 +63,20 @@ export default function PaymentView({ orderData, college, onSuccess, onBack }) {
               <div style={{ fontSize: 22, fontWeight: 900, color: 'var(--acc)', fontFamily: "'Sora',sans-serif" }}>₹{total}</div>
             </div>
             <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--sub)', letterSpacing: .8, textTransform: 'uppercase', marginBottom: 12 }}>Select Method</div>
-            {METHODS.map(m => (
-              <div key={m.id} onClick={() => pay(m.id)} className="press lift glass" style={{ borderRadius: 18, padding: '14px 16px', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 13, cursor: 'pointer' }}>
+            {METHODS.map((m, idx) => (
+              <motion.div key={m.id} onClick={() => pay(m.id)} className="press lift glass"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.1 + idx * 0.08, ease: [0.25, 1, 0.5, 1] }}
+                whileTap={{ scale: 0.97 }}
+                style={{ borderRadius: 18, padding: '14px 16px', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 13, cursor: 'pointer' }}>
                 <div style={{ width: 46, height: 46, borderRadius: 13, background: 'var(--inp)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0, border: '1px solid var(--bdr)' }}>{m.icon}</div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--txt)' }}>{m.label}</div>
                   <div style={{ fontSize: 10.5, color: 'var(--mut)', marginTop: 2 }}>{m.sub}</div>
                 </div>
                 <div style={{ color: 'var(--mut)', fontSize: 22 }}>›</div>
-              </div>
+              </motion.div>
             ))}
           </>
         )}
@@ -113,8 +119,15 @@ export default function PaymentView({ orderData, college, onSuccess, onBack }) {
                 </div>
               ))}
             </div>
-            <button onClick={() => setState('methods')} className="press" style={{ width: '100%', padding: '15px', borderRadius: 17, border: 'none', background: 'linear-gradient(135deg,#FF6B35,#FF3D60)', color: '#fff', fontSize: 14, fontWeight: 800, cursor: 'pointer', boxShadow: '0 8px 28px rgba(255,107,53,.42)', marginBottom: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9 }}>🔄 Retry Payment</button>
-            <button onClick={onBack} className="press" style={{ width: '100%', padding: '14px', borderRadius: 17, border: '1px solid var(--bdr)', background: 'transparent', color: 'var(--sub)', fontSize: 14, fontWeight: 700, cursor: 'pointer' }}>← Back to Cart</button>
+            <motion.button onClick={() => setState('methods')} className="press btn-ripple"
+              whileTap={{ scale: 0.96 }}
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+              style={{ width: '100%', padding: '15px', borderRadius: 17, border: 'none', background: 'linear-gradient(135deg,#FF6B35,#FF3D60)', color: '#fff', fontSize: 14, fontWeight: 800, cursor: 'pointer', boxShadow: '0 8px 28px rgba(255,107,53,.42)', marginBottom: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9 }}>🔄 Retry Payment</motion.button>
+            <motion.button onClick={onBack} className="press"
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+              style={{ width: '100%', padding: '14px', borderRadius: 17, border: '1px solid var(--bdr)', background: 'transparent', color: 'var(--sub)', fontSize: 14, fontWeight: 700, cursor: 'pointer' }}>← Back to Cart</motion.button>
           </div>
         )}
       </div>

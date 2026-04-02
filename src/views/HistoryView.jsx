@@ -1,6 +1,7 @@
 import { fmtDate } from '../utils/helpers';
 import { BottomNav } from '../components/layout/BottomNav';
 import { usePreventExit } from '../hooks';
+import { motion } from 'framer-motion';
 
 export default function HistoryView({ orders, go, addToast, setCart, cartCount = 0, onViewTracking }) {
   usePreventExit('/home');
@@ -40,7 +41,12 @@ export default function HistoryView({ orders, go, addToast, setCart, cartCount =
               ))}
             </div>
             {orders.map((order, idx) => (
-              <div key={order.id} className="anim-fadeUp lift glass" style={{ animationDelay: `${idx * .05}s`, borderRadius: 22, overflow: 'hidden', marginBottom: 12 }}>
+              <motion.div key={order.id} className="lift glass"
+                initial={{ opacity: 0, y: 24, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.35, delay: idx * 0.06, ease: [0.25, 1, 0.5, 1] }}
+                style={{ borderRadius: 22, overflow: 'hidden', marginBottom: 12 }}
+              >
                 <div style={{ background: 'linear-gradient(135deg,rgba(255,107,53,.08),rgba(255,61,96,.05))', padding: '12px 16px', borderBottom: '1px solid var(--bdr)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
                     <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--txt)', fontFamily: "'Sora',sans-serif", display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -72,7 +78,7 @@ export default function HistoryView({ orders, go, addToast, setCart, cartCount =
                     <button onClick={() => reorder(order)} className="press" style={{ flex: 1, padding: '10px', borderRadius: 13, border: 'none', background: 'linear-gradient(135deg,#FF6B35,#FF3D60)', color: '#fff', fontSize: 11.5, fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 14px rgba(255,107,53,.32)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>🔄 Reorder</button>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </>
         )}

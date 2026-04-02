@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfi
 import { auth } from '../firebase.js';
 import { QBLogo } from '../components/common/QBLogo';
 import { getFriendlyError } from '../utils/helpers';
+import { motion } from 'framer-motion';
 import './LoginView.css';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -141,13 +142,17 @@ export default function LoginView({ onLogin, dark, toggleDark }) {
         <div className="lv__inner">
 
           {/* ── Brand header ── */}
-          <div className="lv__brand">
+          <motion.div className="lv__brand"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.25, 1, 0.5, 1] }}
+          >
             <div className="lv__logo-wrap">
               <QBLogo size={58} />
             </div>
             <div className="lv__app-name">QuickBite</div>
             <div className="lv__tagline">Campus Canteen · Reimagined</div>
-          </div>
+          </motion.div>
 
           {/* ── Motto pill ── */}
           <div className="lv__motto">
@@ -157,17 +162,25 @@ export default function LoginView({ onLogin, dark, toggleDark }) {
           </div>
 
           {/* ── Stats row ── */}
-          <div className="lv__stats">
+          <motion.div className="lv__stats"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.25, ease: [0.25, 1, 0.5, 1] }}
+          >
             {[['500+', 'Orders Daily'], ['4.9★', 'Rating'], ['< 5 min', 'Avg Pickup']].map(([v, l]) => (
               <div key={l} className="lv__stat">
                 <div className="lv__stat-val">{v}</div>
                 <div className="lv__stat-label">{l}</div>
               </div>
             ))}
-          </div>
+          </motion.div>
 
           {/* ═══ Glass form panel ═══ */}
-          <div className="lv__panel" ref={formRef}>
+          <motion.div className="lv__panel" ref={formRef}
+            initial={{ opacity: 0, y: 40, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.55, delay: 0.35, ease: [0.25, 1, 0.5, 1] }}
+          >
 
             {/* ── Tab toggle ── */}
             <div className="lv__tabs" role="tablist" aria-label="Login or Sign Up">
@@ -187,16 +200,19 @@ export default function LoginView({ onLogin, dark, toggleDark }) {
             </div>
 
             {/* ── Google sign-in ── */}
-            <button
-              className="lv__google-btn"
+            <motion.button
+              className="lv__google-btn btn-ripple"
               onClick={googleLogin}
               disabled={loading}
               aria-label="Continue with Google"
               id="google-signin-btn"
+              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.01, boxShadow: '0 8px 24px rgba(0,0,0,0.12)' }}
+              transition={{ type: 'spring', stiffness: 400, damping: 17 }}
             >
               <GoogleIcon />
               Continue with Google
-            </button>
+            </motion.button>
 
             {/* ── Divider ── */}
             <div className="lv__divider" aria-hidden="true">
@@ -331,12 +347,15 @@ export default function LoginView({ onLogin, dark, toggleDark }) {
               )}
 
               {/* Submit button */}
-              <button
+              <motion.button
                 type="submit"
-                className="lv__submit"
+                className="lv__submit btn-ripple"
                 disabled={loading}
                 aria-busy={loading}
                 id="login-submit-btn"
+                whileTap={{ scale: 0.96 }}
+                whileHover={{ scale: 1.01, boxShadow: '0 12px 32px rgba(255,107,53,.45)' }}
+                transition={{ type: 'spring', stiffness: 400, damping: 17 }}
               >
                 {loading ? (
                   <>
@@ -348,12 +367,12 @@ export default function LoginView({ onLogin, dark, toggleDark }) {
                 ) : (
                   '🚀 Create Account →'
                 )}
-              </button>
+              </motion.button>
             </form>
 
             {/* SSL notice */}
             <div className="lv__ssl">🔐 SSL Secured · Session persists after close</div>
-          </div>
+          </motion.div>
 
           {/* Bottom spacer */}
           <div style={{ height: 24 }} />

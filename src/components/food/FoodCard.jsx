@@ -1,5 +1,6 @@
 import { memo, useState } from 'react';
 import { LazyImg } from '../common/LazyImg';
+import { motion, AnimatePresence } from 'framer-motion';
 export const FoodCard = memo(function FoodCard({ item, qty, onAdd, onInc, onDec }) {
   const [hov, setHov] = useState(false);
   return (
@@ -35,15 +36,36 @@ export const FoodCard = memo(function FoodCard({ item, qty, onAdd, onInc, onDec 
           <span style={{ fontSize: 9.5, fontWeight: 700, color: 'var(--sub)', background: 'var(--inp)', borderRadius: 7, padding: '3px 7px', border: '1px solid var(--bdr)' }}>🔥{item.cal}</span>
         </div>
         
+        <AnimatePresence mode="wait">
         {qty === 0 ? (
-          <button onClick={onAdd} className="press" style={{ width: '100%', background: 'linear-gradient(135deg,#FF6B35,#FF3D60)', color: '#fff', border: 'none', borderRadius: 14, padding: '10px 0', fontSize: 13, fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 16px rgba(255,107,53,.35)', letterSpacing: .5 }}>+ ADD</button>
+          <motion.button key="add" onClick={onAdd} className="press btn-ripple"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            whileTap={{ scale: 0.93 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+            style={{ width: '100%', background: 'linear-gradient(135deg,#FF6B35,#FF3D60)', color: '#fff', border: 'none', borderRadius: 14, padding: '10px 0', fontSize: 13, fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 16px rgba(255,107,53,.35)', letterSpacing: .5 }}
+          >+ ADD</motion.button>
         ) : (
-          <div style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(135deg,#FF6B35,#FF3D60)', borderRadius: 14, overflow: 'hidden', boxShadow: '0 4px 14px rgba(255,107,53,.35)' }}>
+          <motion.div key="stepper"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+            style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(135deg,#FF6B35,#FF3D60)', borderRadius: 14, overflow: 'hidden', boxShadow: '0 4px 14px rgba(255,107,53,.35)' }}
+          >
             <button onClick={onDec} className="press" style={{ flex: 1, background: 'transparent', border: 'none', color: '#fff', height: 40, fontSize: 22, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
-            <span style={{ color: '#fff', fontWeight: 900, fontSize: 14, minWidth: 24, textAlign: 'center' }}>{qty}</span>
+            <motion.span
+              key={qty}
+              initial={{ scale: 1.4, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: 'spring', stiffness: 500, damping: 15 }}
+              style={{ color: '#fff', fontWeight: 900, fontSize: 14, minWidth: 24, textAlign: 'center' }}
+            >{qty}</motion.span>
             <button onClick={onInc} className="press" style={{ flex: 1, background: 'transparent', border: 'none', color: '#fff', height: 40, fontSize: 20, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
-          </div>
+          </motion.div>
         )}
+        </AnimatePresence>
       </div>
     </div>
   );

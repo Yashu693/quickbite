@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate, useLocation } from 'react-router-dom';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth, db, doc, setDoc, addDoc, collection, serverTimestamp } from './firebase.js';
 import { DB, randId, randToken } from './utils/helpers';
@@ -21,6 +21,28 @@ import ReceiptView from './views/ReceiptView';
 import HistoryView from './views/HistoryView';
 import ProfileView from './views/ProfileView';
 import AdminDashboardView from './views/AdminDashboardView';
+
+// ── Animated route wrapper: re-triggers page-enter animation on every navigation ──
+function RoutesWithTransition({ user, college, cart, setCart, addToast, go, dark, toggleDark, skel, pendingOrder, payData, setView, onGoToPay, onPayOK, totalCartItems, orders, onLogout, viewOrder, doLogin, doCollege }) {
+  const location = useLocation();
+  return (
+    <div key={location.pathname} className="page-enter" style={{ position: 'absolute', inset: 0 }}>
+      <Routes location={location}>
+        <Route path="/" element={<LoginView onLogin={doLogin} dark={dark} toggleDark={toggleDark} />} />
+        <Route path="/collegeSelect" element={<CollegeSelectView user={user} onSelect={doCollege} />} />
+        <Route path="/home" element={<HomeView user={user} college={college} cart={cart} setCart={setCart} addToast={addToast} go={go} dark={dark} toggleDark={toggleDark} skeletonMode={skel} pendingOrder={pendingOrder} />} />
+        <Route path="/cart" element={<CartView user={user} college={college} cart={cart} setCart={setCart} addToast={addToast} go={go} onGoToPay={onGoToPay} />} />
+        <Route path="/payment" element={payData ? <PaymentView orderData={payData} college={college} onSuccess={onPayOK} onBack={() => setView('cart')} /> : <Navigate to="/cart" />} />
+        <Route path="/tracking" element={pendingOrder ? <TrackingView user={user} order={pendingOrder} onDone={() => go('home')} onViewReceipt={() => go('receipt')} addToast={addToast} /> : <Navigate to="/home" />} />
+        <Route path="/receipt" element={pendingOrder ? <ReceiptView order={pendingOrder} onDone={() => go('tracking')} /> : <Navigate to="/home" />} />
+        <Route path="/history" element={<HistoryView orders={orders} go={go} addToast={addToast} setCart={setCart} cartCount={totalCartItems} onViewTracking={viewOrder} />} />
+        <Route path="/profile" element={<ProfileView user={user} college={college} dark={dark} toggleDark={toggleDark} go={go} orders={orders} onLogout={onLogout} onChangeCollege={() => setView('collegeSelect')} cartCount={totalCartItems} addToast={addToast} />} />
+        <Route path="/admin" element={<AdminDashboardView go={go} user={user} />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </div>
+  );
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  ROOT APP — Orchestrates routing, state, and Firebase auth
@@ -185,19 +207,14 @@ export default function App() {
           {splash ? (
             <SplashScreen onDone={() => { }} />
           ) : (
-            <Routes>
-              <Route path="/" element={<LoginView onLogin={doLogin} dark={dark} toggleDark={toggleDark} />} />
-              <Route path="/collegeSelect" element={<CollegeSelectView user={user} onSelect={doCollege} />} />
-              <Route path="/home" element={<HomeView user={user} college={college} cart={cart} setCart={setCart} addToast={addToast} go={go} dark={dark} toggleDark={toggleDark} skeletonMode={skel} pendingOrder={pendingOrder} />} />
-              <Route path="/cart" element={<CartView user={user} college={college} cart={cart} setCart={setCart} addToast={addToast} go={go} onGoToPay={onGoToPay} />} />
-              <Route path="/payment" element={payData ? <PaymentView orderData={payData} college={college} onSuccess={onPayOK} onBack={() => setView('cart')} /> : <Navigate to="/cart" />} />
-              <Route path="/tracking" element={pendingOrder ? <TrackingView user={user} order={pendingOrder} onDone={() => go('home')} onViewReceipt={() => go('receipt')} addToast={addToast} /> : <Navigate to="/home" />} />
-              <Route path="/receipt" element={pendingOrder ? <ReceiptView order={pendingOrder} onDone={() => go('tracking')} /> : <Navigate to="/home" />} />
-              <Route path="/history" element={<HistoryView orders={orders} go={go} addToast={addToast} setCart={setCart} cartCount={totalCartItems} onViewTracking={viewOrder} />} />
-              <Route path="/profile" element={<ProfileView user={user} college={college} dark={dark} toggleDark={toggleDark} go={go} orders={orders} onLogout={onLogout} onChangeCollege={() => setView('collegeSelect')} cartCount={totalCartItems} addToast={addToast} />} />
-              <Route path="/admin" element={<AdminDashboardView go={go} user={user} />} />
-              <Route path="*" element={<Navigate to="/" />} />
-            </Routes>
+            <RoutesWithTransition
+              user={user} college={college} cart={cart} setCart={setCart}
+              addToast={addToast} go={go} dark={dark} toggleDark={toggleDark}
+              skel={skel} pendingOrder={pendingOrder} payData={payData}
+              setView={setView} onGoToPay={onGoToPay} onPayOK={onPayOK}
+              totalCartItems={totalCartItems} orders={orders} onLogout={onLogout}
+              viewOrder={viewOrder} doLogin={doLogin} doCollege={doCollege}
+            />
           )}
         </div>
         <NetworkBanner online={online} />

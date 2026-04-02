@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { QBLogo } from '../common/QBLogo';
 import { TAB_ROUTES } from '../../data/routes';
+import { motion } from 'framer-motion';
 
 export function BottomNav({ view, go, cartCount = 0 }) {
   const activeIndex = useMemo(() => {
@@ -39,26 +40,29 @@ export function BottomNav({ view, go, cartCount = 0 }) {
       }}>
         
         {/* Liquid Sliding Pill Indicator */}
-        <div style={{
-          position: 'absolute',
-          top: 8,
-          bottom: 8,
-          width: `calc(${tabWidth}% - 16px)`,
-          left: 8,
-          transform: `translateX(calc(${safeIndex * 100}% + ${safeIndex * 16}px))`,
-          transition: 'transform 320ms cubic-bezier(0.25, 1, 0.5, 1)',
-          pointerEvents: 'none',
-          zIndex: 0
-        }}>
+        <motion.div
+          layout
+          transition={{ type: 'spring', stiffness: 350, damping: 30, mass: 0.8 }}
+          style={{
+            position: 'absolute',
+            top: 8,
+            bottom: 8,
+            width: `calc(${tabWidth}% - 16px)`,
+            left: 8,
+            transform: `translateX(calc(${safeIndex * 100}% + ${safeIndex * 16}px))`,
+            pointerEvents: 'none',
+            zIndex: 0
+          }}
+        >
           <div style={{
             width: '100%', 
             height: '100%',
             borderRadius: 28, 
-            background: 'rgba(150, 150, 160, 0.18)', // Universal neutral frosted glass pill (works flawlessly on black and white)
-            boxShadow: 'none', // Removed internal shadows which added to muddiness
-            border: 'none' // Removed borders for cleaner Apple liquid look
+            background: 'rgba(150, 150, 160, 0.18)',
+            boxShadow: 'none',
+            border: 'none'
           }} />
-        </div>
+        </motion.div>
 
         {/* Tabs Layout */}
         <div style={{ display: 'flex', width: '100%', height: '100%', zIndex: 1, position: 'relative' }}>

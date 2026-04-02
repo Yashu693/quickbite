@@ -8,6 +8,7 @@ import { SkeletonCard } from '../components/common/SkeletonCard';
 import { BottomNav } from '../components/layout/BottomNav';
 import { FoodCard } from '../components/food/FoodCard';
 import { BannerCarousel } from '../components/food/BannerCarousel';
+import { motion } from 'framer-motion';
 
 export default function HomeView({ user, college, cart, setCart, addToast, go, dark, toggleDark, skeletonMode, pendingOrder }) {
   const [search, setSearch] = useState('');
@@ -198,9 +199,13 @@ export default function HomeView({ user, college, cart, setCart, addToast, go, d
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, paddingBottom: 8 }}>
               {filtered.map((item, i) => (
-                <div key={item.id} className="anim-fadeUp" style={{ animationDelay: `${Math.min(i, .9) * .055}s` }}>
+                <motion.div key={item.id}
+                  initial={{ opacity: 0, y: 24, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.35, delay: Math.min(i * 0.05, 0.4), ease: [0.25, 1, 0.5, 1] }}
+                >
                   <FoodCard item={item} qty={getQty(item.id)} onAdd={() => addItem(item)} onInc={() => incItem(item)} onDec={() => decItem(item)} />
-                </div>
+                </motion.div>
               ))}
             </div>
           )}

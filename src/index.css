@@ -159,6 +159,43 @@ button:focus, input:focus, textarea:focus { outline: none; }
   0%,100% { transform: scale(1); }
   50%     { transform: scale(1.18); }
 }
+@keyframes pageSlideIn {
+  from { opacity: 0; transform: translateX(28px) scale(0.98); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes pageSlideOut {
+  from { opacity: 1; transform: translateX(0) scale(1); }
+  to   { opacity: 0; transform: translateX(-28px) scale(0.98); }
+}
+@keyframes pageFadeScale {
+  from { opacity: 0; transform: scale(0.94); filter: blur(4px); }
+  to   { opacity: 1; transform: scale(1); filter: blur(0px); }
+}
+@keyframes subtlePulse {
+  0%,100% { transform: scale(1); }
+  50%     { transform: scale(1.03); }
+}
+@keyframes ripple {
+  0%   { transform: scale(0); opacity: 0.5; }
+  100% { transform: scale(4); opacity: 0; }
+}
+@keyframes glowPulse {
+  0%,100% { box-shadow: 0 0 16px rgba(255,107,53,.2); }
+  50%     { box-shadow: 0 0 32px rgba(255,107,53,.5), 0 0 64px rgba(255,61,96,.15); }
+}
+@keyframes slideInBottom {
+  from { opacity: 0; transform: translateY(40px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes slideOutDown {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(30px); }
+}
+@keyframes wiggle {
+  0%,100% { transform: rotate(0deg); }
+  25%     { transform: rotate(-3deg); }
+  75%     { transform: rotate(3deg); }
+}
 
 /* ── UTILITY ANIMATION CLASSES ────────────────────────────────────── */
 .anim-fadeUp    { animation: fadeUp    .48s cubic-bezier(.2,.8,.4,1)      both; }
@@ -175,26 +212,62 @@ button:focus, input:focus, textarea:focus { outline: none; }
 .anim-pulse     { animation: pulse     1.6s ease                      infinite; }
 .anim-pulseBig  { animation: pulseBig  1.4s ease                      infinite; }
 
+/* Page routing transitions */
+.page-enter     { animation: pageFadeScale .42s cubic-bezier(.2,.8,.4,1) both; }
+.page-slideIn   { animation: pageSlideIn   .38s cubic-bezier(.25,1,.5,1)  both; }
+.page-slideInB  { animation: slideInBottom .42s cubic-bezier(.25,1,.5,1)  both; }
+.anim-wiggle    { animation: wiggle .5s ease both; }
+.anim-glowPulse { animation: glowPulse 2.2s ease-in-out infinite; }
+
 /* ── INTERACTION CLASSES ──────────────────────────────────────────── */
 .lift {
-  transition: transform .22s ease, box-shadow .22s ease;
+  transition: transform .25s cubic-bezier(.25,1,.5,1), box-shadow .25s cubic-bezier(.25,1,.5,1);
   cursor: pointer;
+  will-change: transform;
 }
 .lift:hover {
-  transform: translateY(-3px) scale(.99);
-  box-shadow: 0 14px 40px rgba(0,0,0,.18);
+  transform: translateY(-4px) scale(1.005);
+  box-shadow: 0 16px 48px rgba(0,0,0,.22), 0 0 0 1px rgba(255,107,53,.08);
 }
 .lift:active {
   transform: translateY(-1px) scale(.97);
+  transition-duration: .1s;
 }
 
 .press {
-  transition: transform .12s ease;
+  transition: transform .15s cubic-bezier(.25,1,.5,1), filter .15s ease;
   -webkit-user-select: none;
   user-select: none;
   cursor: pointer;
+  will-change: transform;
 }
-.press:active { transform: scale(.91) !important; }
+.press:active {
+  transform: scale(.92) !important;
+  filter: brightness(0.95);
+  transition-duration: .08s;
+}
+
+/* Ripple overlay for buttons */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+.btn-ripple::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255,255,255,.18) 10%, transparent 60%);
+  transform: scale(0);
+  opacity: 0;
+  transition: transform .5s, opacity .4s;
+  pointer-events: none;
+  border-radius: inherit;
+}
+.btn-ripple:active::after {
+  transform: scale(2.5);
+  opacity: 1;
+  transition: 0s;
+}
 
 /* ── SKELETON SHIMMER ─────────────────────────────────────────────── */
 .sk {

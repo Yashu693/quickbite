@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { COLLEGES } from '../data/constants';
+import { motion } from 'framer-motion';
 import './CollegeSelectView.css';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -76,10 +77,13 @@ export default function CollegeSelectView({ user, onSelect }) {
               if (c.locked) cardClass += ' cs__card--locked';
 
               return (
-                <div
+                <motion.div
                   key={c.id}
                   className={cardClass}
-                  style={{ animationDelay: `${i * 0.065}s` }}
+                  initial={{ opacity: 0, y: 24, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.4, delay: i * 0.07, ease: [0.25, 1, 0.5, 1] }}
+                  whileTap={!c.locked ? { scale: 0.96 } : {}}
                   onClick={() => handleCardClick(c)}
                   onKeyDown={(e) => handleCardKeyDown(e, c)}
                   role="radio"
@@ -117,7 +121,7 @@ export default function CollegeSelectView({ user, onSelect }) {
                   <div className="cs__card-name">{c.short}</div>
                   <div className="cs__card-full">{c.name}</div>
                   <div className="cs__card-area">📍 {c.area}</div>
-                </div>
+                </motion.div>
               );
             })}
           </div>
@@ -170,12 +174,15 @@ export default function CollegeSelectView({ user, onSelect }) {
           )}
 
           {/* CTA Button — solid gradient, no glass */}
-          <button
+          <motion.button
             className="cs__cta"
             onClick={handleEnter}
             disabled={loading}
             aria-label={loading ? `Entering ${sel?.short}` : `Enter ${sel?.short} Canteen`}
             id="enter-canteen-btn"
+            whileTap={{ scale: 0.96 }}
+            whileHover={{ scale: 1.02, boxShadow: '0 12px 40px rgba(255,107,53,.5)' }}
+            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
           >
             {loading ? (
               <>
@@ -188,7 +195,7 @@ export default function CollegeSelectView({ user, onSelect }) {
                 <span className="cs__cta-arrow">→</span>
               </>
             )}
-          </button>
+          </motion.button>
         </div>
       </div>
     </div>

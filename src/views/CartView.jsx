@@ -4,6 +4,7 @@ import { resolveFoodItem } from '../utils/helpers';
 import { BottomNav } from '../components/layout/BottomNav';
 import { SwipeToPay } from '../components/payment/SwipeToPay';
 import { usePreventExit } from '../hooks';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function CartView({ user, college, cart, setCart, addToast, go, onGoToPay }) {
   const [coupon, setCoupon] = useState('');
@@ -119,8 +120,16 @@ export default function CartView({ user, college, cart, setCart, addToast, go, o
             <span style={{ fontSize: 16 }}>🛒</span>
             <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--txt)', fontFamily: "'Sora',sans-serif" }}>Order Items</span>
           </div>
+          <AnimatePresence mode="popLayout">
           {items.map((item, i) => (
-            <div key={item.id} style={{ padding: '13px 16px', borderBottom: i < items.length - 1 ? '1px solid var(--bdr)' : 'none', display: 'flex', alignItems: 'center', gap: 12, background: 'var(--card)' }}>
+            <motion.div key={item.id}
+              layout
+              initial={{ opacity: 0, x: -20, scale: 0.95 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: 30, scale: 0.9, height: 0, padding: 0, overflow: 'hidden' }}
+              transition={{ duration: 0.3, delay: i * 0.04, ease: [0.25, 1, 0.5, 1] }}
+              style={{ padding: '13px 16px', borderBottom: i < items.length - 1 ? '1px solid var(--bdr)' : 'none', display: 'flex', alignItems: 'center', gap: 12, background: 'var(--card)' }}
+            >
               <div style={{ width: 50, height: 50, borderRadius: 15, background: item.g, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0, boxShadow: '0 4px 12px rgba(0,0,0,.15)' }}>{item.emoji}</div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--txt)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: "'Sora',sans-serif" }}>{item.name}</div>
@@ -132,8 +141,9 @@ export default function CartView({ user, college, cart, setCart, addToast, go, o
                 <button onClick={() => inc(item.id)} className="press" style={{ background: 'transparent', border: 'none', color: '#fff', width: 40, height: 40, fontSize: 20, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
               </div>
               <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--txt)', minWidth: 52, textAlign: 'right', flexShrink: 0 }}>₹{item.price * item.qty}</div>
-            </div>
+            </motion.div>
           ))}
+          </AnimatePresence>
         </div>
 
         {/* Compact Coupon cell */}
