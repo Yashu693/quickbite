@@ -179,12 +179,12 @@
   .fb-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;display:flex;flex-direction:column;gap:12px;animation:card-in .3s ease both;transition:border-color .2s,transform .2s;}
   .fb-card:hover{border-color:var(--border2);transform:translateY(-2px);}
   .fb-card.t-bug{border-left:3px solid var(--red);}
-  .fb-card.t-suggestion{border-left:3px solid var(--blue);}
+  .fb-card.t-feature{border-left:3px solid var(--blue);}
   .fb-card.t-compliment{border-left:3px solid var(--green);}
   .fb-card.t-other{border-left:3px solid var(--muted);}
   .fb-badge{font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;padding:4px 11px;border-radius:999px;white-space:nowrap;flex-shrink:0;}
   .t-bug .fb-badge{background:rgba(255,77,109,0.15);color:var(--red);border:1px solid rgba(255,77,109,0.25);}
-  .t-suggestion .fb-badge{background:rgba(77,158,255,0.15);color:var(--blue);border:1px solid rgba(77,158,255,0.25);}
+  .t-feature .fb-badge{background:rgba(77,158,255,0.15);color:var(--blue);border:1px solid rgba(77,158,255,0.25);}
   .t-compliment .fb-badge{background:rgba(0,229,160,0.15);color:var(--green);border:1px solid rgba(0,229,160,0.25);}
   .t-other .fb-badge{background:rgba(138,135,159,0.1);color:var(--muted);border:1px solid rgba(138,135,159,0.2);}
   .fb-msg{font-size:13.5px;line-height:1.7;background:var(--surface2);border-radius:10px;padding:12px 14px;}
@@ -247,7 +247,20 @@
       <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;"><span style="color:var(--muted);">Peak hour</span><span style="font-family:var(--font-head);font-weight:600;" id="sidePeak">—</span></div>
       <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;"><span style="color:var(--muted);">Feedback count</span><span style="font-family:var(--font-head);font-weight:600;" id="sideFeedback">0</span></div>
     </div>
-    <style>@media (min-width: 768px) { #sideStatsBox { display: flex !important; } }</style>
+    <style>
+      @media (min-width: 768px) { #sideStatsBox { display: flex !important; } }
+      @media (max-width: 767px) {
+        .topbar { padding: 12px; height: auto; flex-wrap: wrap; gap: 10px; }
+        .topbar > div:last-child { width: auto; margin-left: auto; }
+        #clockDisplay, .topbar-avatar { display: none; }
+        .logo-text { font-size: 14px; }
+        .sidebar { padding: 12px; gap: 8px; border-bottom: 1px solid var(--border); }
+        .nav-item { padding: 8px 12px; font-size: 13px; }
+        .stats-bar { padding: 12px; gap: 10px; }
+        .orders-toolbar { padding: 12px; }
+        .cards-grid { padding: 12px; gap: 10px; }
+      }
+    </style>
 
     <div class="sidebar-footer">
       <div class="canteen-info">
@@ -341,8 +354,8 @@
           <div class="view-tabs">
             <button class="view-tab active" onclick="setFbFilter('all',this)">All</button>
             <button class="view-tab" onclick="setFbFilter('bug',this)">🐛 Bugs</button>
-            <button class="view-tab" onclick="setFbFilter('suggestion',this)">💡 Ideas</button>
-            <button class="view-tab" onclick="setFbFilter('compliment',this)">🙌 Praise</button>
+            <button class="view-tab" onclick="setFbFilter('feature',this)">✨ Ideas</button>
+            <button class="view-tab" onclick="setFbFilter('compliment',this)">👏 Praise</button>
             <button class="view-tab" onclick="setFbFilter('other',this)">Other</button>
           </div>
           <div class="section-count" id="feedbackCount">0 items</div>
@@ -529,12 +542,12 @@ function renderFeedback(){
   const grid=document.getElementById('feedbackGrid');
   const f=allFeedback.filter(fb=>activeFbFilter==='all'||fb.type===activeFbFilter);
   document.getElementById('feedbackCount').textContent=`${f.length} item${f.length!==1?'s':''}`;
-  const types=['bug','suggestion','compliment','other'];
-  const icons={bug:'🐛',suggestion:'💡',compliment:'🙌',other:'📝'};
-  const colors={bug:'var(--red)',suggestion:'var(--blue)',compliment:'var(--green)',other:'var(--muted)'};
+  const types=['bug','feature','compliment','other'];
+  const icons={bug:'🐛',feature:'✨',compliment:'👏',other:'💬'};
+  const colors={bug:'var(--red)',feature:'var(--blue)',compliment:'var(--green)',other:'var(--muted)'};
   document.getElementById('feedbackSummary').innerHTML=types.map(t=>{ const cnt=allFeedback.filter(fb=>fb.type===t).length; return `<div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:12px 18px;display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">${icons[t]}</span><div><div style="font-family:var(--font-head);font-size:20px;font-weight:700;color:${colors[t]};">${cnt}</div><div style="font-size:11px;color:var(--muted);text-transform:capitalize;">${t}</div></div></div>`; }).join('');
   if(!f.length){ grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon">💬</div><div class="empty-title">No feedback yet</div><div class="empty-sub">Feedback from QuickBite app appears here.</div></div>`; return; }
-  const labels={bug:'Bug Report',suggestion:'Suggestion',compliment:'Compliment',other:'Other'};
+  const labels={bug:'Bug Report',feature:'Feature Request',compliment:'Compliment',other:'Other'};
   grid.innerHTML=f.map(fb=>{
     const ini=(fb.name||'A').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
     return `<div class="fb-card t-${fb.type}"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;"><div style="display:flex;align-items:center;gap:10px;"><div class="fb-avatar">${ini}</div><div><div style="font-size:14px;font-weight:500;">${fb.name}</div><div style="font-size:11px;color:var(--muted);">${fb.email||'No email'}</div></div></div><div class="fb-badge">${icons[fb.type]} ${labels[fb.type]||'Other'}</div></div><div class="fb-msg">${fb.message||'<span style="color:var(--muted);font-style:italic;">No message</span>'}</div><div style="display:flex;align-items:center;justify-content:space-between;"><div style="font-size:11px;color:var(--muted);">${ago(fb.date)}</div>${fb.screenshot?`<a href="${fb.screenshot}" target="_blank" style="font-size:12px;color:var(--blue);">📎 Screenshot</a>`:''}</div></div>`;
