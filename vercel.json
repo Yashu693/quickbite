@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/((?!quickbite-admin\\.html|assets/|favicon\\.ico).*)", "destination": "/index.html" }
+  ]
+}

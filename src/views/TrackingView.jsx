@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { fmtSecs } from '../utils/helpers';
 import { CircularTimer } from '../components/payment/CircularTimer';
-import { usePreventExit, useConfirmExit } from '../hooks';
+import { useConfirmExit } from '../hooks';
 import { RatingModal } from '../components/profile/RatingModal';
 import { motion } from 'framer-motion';
 
@@ -16,7 +16,7 @@ export default function TrackingView({ user, order, onDone, onViewReceipt, addTo
     return Math.floor((Date.now() - new Date(order.date).getTime()) / 1000);
   }, [order]);
 
-  usePreventExit('/home');
+
   useConfirmExit('Are you sure? Your order tracking progress will be lost.');
 
   const [stage, setStage] = useState(passedSecs >= (maxPrepSecs + 3) ? 3 : passedSecs > 3 ? 2 : passedSecs > 1 ? 1 : 0);

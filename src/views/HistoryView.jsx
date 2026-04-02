@@ -1,10 +1,9 @@
 import { fmtDate } from '../utils/helpers';
 import { BottomNav } from '../components/layout/BottomNav';
-import { usePreventExit } from '../hooks';
 import { motion } from 'framer-motion';
 
 export default function HistoryView({ orders, go, addToast, setCart, cartCount = 0, onViewTracking }) {
-  usePreventExit('/home');
+
 
   const totalSpent = orders.reduce((s, o) => s + o.total, 0);
   const reorder = order => {

@@ -55,12 +55,7 @@ export default function App() {
 
   const setView = (v) => navigate(v === 'login' ? '/' : `/${v}`);
 
-  useEffect(() => {
-    // Android hardware back button exit prevention
-    if (window.history.length <= 1) {
-      window.history.pushState(null, "", window.location.href);
-    }
-  }, []);
+
   const [college, setCollege] = useState(null);
   const [cart, setCart] = useState({});
   const [orders, setOrders] = useState([]);
@@ -106,13 +101,12 @@ export default function App() {
         const savedOrders = DB.get(`orders_${uId}`) || [];
 
         setOrders(savedOrders.map(o => ({ ...o, date: new Date(o.date) })));
+        const currentPath = window.location.pathname;
         if (savedCollege) {
           setCollege(savedCollege);
-          setSkel(true);
-          setView('home');
-          setTimeout(() => setSkel(false), 2200);
+          if (currentPath === '/' || currentPath === '/login') setView('home');
         } else {
-          setView('collegeSelect');
+          if (currentPath === '/' || currentPath === '/login') setView('collegeSelect');
         }
 
         if (isNewOrDifferentUser) {
@@ -122,7 +116,7 @@ export default function App() {
         }
       } else {
         setUser(null);
-        setView('login');
+        if (window.location.pathname !== '/') setView('login');
       }
     });
 
@@ -149,8 +143,7 @@ export default function App() {
     }
     setCollege(c);
     if (user?.uid) DB.set(`college_${user.uid}`, c);
-    setSkel(true); setView('home');
-    setTimeout(() => setSkel(false), 2200);
+    setView('home');
     addToast({ icon: c.emoji, title: `Welcome to ${c.short}!`, msg: c.canteen, cta: 'EXPLORE' });
   };
   const onGoToPay = d => { setPayData(d); setView('payment'); };

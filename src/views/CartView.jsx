@@ -3,7 +3,7 @@ import { COUPONS, PREP_FEE } from '../data/constants';
 import { resolveFoodItem } from '../utils/helpers';
 import { BottomNav } from '../components/layout/BottomNav';
 import { SwipeToPay } from '../components/payment/SwipeToPay';
-import { usePreventExit } from '../hooks';
+import { useConfirmExit } from '../hooks';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function CartView({ user, college, cart, setCart, addToast, go, onGoToPay }) {
@@ -15,7 +15,7 @@ export default function CartView({ user, college, cart, setCart, addToast, go, o
   const [room, setRoom] = useState('');
   const [phone, setPhone] = useState('');
 
-  usePreventExit('/home');
+
 
   const items = Object.entries(cart).map(([id, qty]) => { const f = resolveFoodItem(id); return f ? { ...f, qty } : null; }).filter(Boolean);
   const sub = items.reduce((s, i) => s + i.price * i.qty, 0);

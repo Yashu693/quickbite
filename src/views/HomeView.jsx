@@ -77,9 +77,17 @@ export default function HomeView({ user, college, cart, setCart, addToast, go, d
   const greeting = hour < 12 ? 'Good Morning ☀️' : hour < 17 ? 'Good Afternoon 🌤️' : 'Good Evening 🌙';
 
   return (
-    <div style={{ position: 'absolute', inset: 0, background: 'var(--bg)' }}>
+    <motion.div 
+      initial={{ scale: 1.04, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ duration: 0.4, ease: [0.215, 0.61, 0.355, 1] }} // smooth ease-out
+      style={{ position: 'absolute', inset: 0, background: 'var(--bg)' }}
+    >
       {/* ── HEADER ── */}
-      <div className={hdr ? 'glass-hdr' : ''} style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 20, padding: '38px 16px 12px', transition: 'all .3s ease', background: hdr ? 'var(--hdr)' : 'transparent' }}>
+      <motion.div 
+        initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.09, duration: 0.4, ease: "easeOut" }}
+        className={hdr ? 'glass-hdr' : ''} style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 20, padding: '38px 16px 12px', transition: 'all .3s ease, transform 0.4s ease, opacity 0.4s ease', background: hdr ? 'var(--hdr)' : 'transparent' }}
+      >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <div style={{ fontSize: 9.5, color: 'var(--acc)', fontWeight: 700, letterSpacing: .5, marginBottom: 2, display: 'flex', alignItems: 'center', gap: 4 }}>
@@ -92,14 +100,16 @@ export default function HomeView({ user, college, cart, setCart, addToast, go, d
             <div onClick={() => go('profile')} className="press" style={{ width: 36, height: 36, borderRadius: 12, background: AVATAR_GRAD[user?.avatar || 0], display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 900, color: '#fff', boxShadow: '0 4px 16px rgba(255,107,53,.42)', cursor: 'pointer', fontFamily: "'Sora',sans-serif" }}>{user?.name?.[0] || 'U'}</div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* ── SCROLL BODY ── */}
       <div ref={scrollRef} className="hs" style={{ position: 'absolute', inset: 0, overflowY: 'auto', overflowX: 'hidden', paddingTop: 90, paddingBottom: totalItems > 0 ? 162 : 88 }}>
         <div style={{ padding: '0 14px' }}>
 
           {/* Banner */}
-          <BannerCarousel onToast={addToast} />
+          <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.18, duration: 0.4, ease: "easeOut" }}>
+            <BannerCarousel onToast={addToast} />
+          </motion.div>
 
           {/* Crazy Deals header strip */}
           {!search && cat === 'All' && !dealClaimed && (
@@ -113,7 +123,10 @@ export default function HomeView({ user, college, cart, setCart, addToast, go, d
           )}
 
           {/* Search */}
-          <div style={{ display: 'flex', gap: 9, marginBottom: 14 }}>
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.27, duration: 0.4, ease: "easeOut" }}
+            style={{ display: 'flex', gap: 9, marginBottom: 14 }}
+          >
             <div style={{ flex: 1, position: 'relative' }}>
               <span style={{ position: 'absolute', left: 13, top: '50%', transform: 'translateY(-50%)', fontSize: 16, pointerEvents: 'none', zIndex: 1 }}>🔍</span>
               <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search samosa, chai..."
@@ -130,17 +143,20 @@ export default function HomeView({ user, college, cart, setCart, addToast, go, d
                 </div>
               )}
             </div>
-          </div>
+          </motion.div>
 
           {/* Category chips */}
-          <div style={{ display: 'flex', gap: 7, marginBottom: 18, overflowX: 'auto', paddingBottom: 3 }} className="hs">
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.36, duration: 0.4, ease: "easeOut" }}
+            style={{ display: 'flex', gap: 7, marginBottom: 18, overflowX: 'auto', paddingBottom: 3 }} className="hs"
+          >
             {CATS.map((c, i) => (
               <button key={c} onClick={() => setCat(c)} className="press anim-fadeUp"
                 style={{ animationDelay: `${i * .06}s`, flexShrink: 0, padding: '8px 16px', borderRadius: 99, border: `2px solid ${cat === c ? 'var(--acc)' : 'var(--bdr)'}`, background: cat === c ? 'linear-gradient(135deg,#FF6B35,#FF3D60)' : 'var(--glass)', color: cat === c ? '#fff' : 'var(--sub)', fontSize: 11.5, fontWeight: 700, cursor: 'pointer', transition: 'all .2s', whiteSpace: 'nowrap', boxShadow: cat === c ? '0 4px 16px rgba(255,107,53,.35)' : 'none', backdropFilter: 'blur(10px)' }}>
                 {{ 'All': '🍽️', Snacks: '🥟', Drinks: '🥤', Combos: '🍱' }[c]} {c}
               </button>
             ))}
-          </div>
+          </motion.div>
 
           {/* ── Crazy Deals Strip ── */}
           {!search && cat === 'All' && aiRecs.length > 0 && !dealClaimed && (
@@ -179,12 +195,16 @@ export default function HomeView({ user, college, cart, setCart, addToast, go, d
           )}
 
           {/* Section header */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.45, duration: 0.4, ease: "easeOut" }}
+            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}
+          >
             <div style={{ fontSize: 14.5, fontWeight: 800, color: 'var(--txt)', fontFamily: "'Sora',sans-serif" }}>{search ? `"${search}"` : cat === 'All' ? 'All Items' : cat}</div>
             <div style={{ fontSize: 11, color: 'var(--mut)', fontWeight: 600 }}>{filtered.length} items</div>
-          </div>
+          </motion.div>
 
           {/* Food grid */}
+          <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.54, duration: 0.4, ease: "easeOut" }}>
           {skeletonMode ? (
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, paddingBottom: 8 }}>
               {Array(6).fill(0).map((_, i) => <SkeletonCard key={i} />)}
@@ -209,6 +229,7 @@ export default function HomeView({ user, college, cart, setCart, addToast, go, d
               ))}
             </div>
           )}
+          </motion.div>
           <div style={{ height: 10 }} />
         </div>
       </div>
@@ -325,7 +346,9 @@ export default function HomeView({ user, college, cart, setCart, addToast, go, d
       )}
 
       {showSort && <div onClick={() => setShowSort(false)} style={{ position: 'absolute', inset: 0, zIndex: 40 }} />}
-      <BottomNav view="home" go={go} cartCount={totalItems} />
-    </div>
+      <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.63, duration: 0.4, ease: "easeOut" }}>
+        <BottomNav view="home" go={go} cartCount={totalItems} />
+      </motion.div>
+    </motion.div>
   );
 }

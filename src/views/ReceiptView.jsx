@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { PREP_FEE } from '../data/constants';
 import { fmtDate } from '../utils/helpers';
 import { QBLogo } from '../components/common/QBLogo';
-import { usePreventExit } from '../hooks';
+
 
 export default function ReceiptView({ order, onDone }) {
-  usePreventExit('/home');
+
 
   const [copied, setCopied] = useState(false);
   const shareText = `QuickBite Receipt\nOrder: ${order?.id}\nTotal: ₹${order?.total}\nToken: ${order?.token}`;

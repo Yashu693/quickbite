@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { BottomNav } from '../components/layout/BottomNav';
-import { usePreventExit } from '../hooks';
+
 
 // Profile modular components
 import { ProfileHeader } from '../components/profile/ProfileHeader';
@@ -20,7 +20,7 @@ export default function ProfileView({ user, college, go, orders, onLogout, onCha
   const { dark, toggleDark } = useTheme();
   const [modal, setModal] = useState(null);
   
-  usePreventExit('/home');
+
   
   const close = () => setModal(null);
 

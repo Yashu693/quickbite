@@ -8,7 +8,6 @@ import { useState, useEffect, useCallback } from 'react';
 export { useLocalStorage } from './useLocalStorage';
 export { useAsync } from './useAsync';
 export { useAnalytics } from './useAnalytics';
-export { usePreventExit } from './usePreventExit';
 export { useConfirmExit } from './useConfirmExit';
 
 // ── useNetwork ───────────────────────────────────────────────────────────
