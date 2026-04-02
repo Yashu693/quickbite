@@ -64,6 +64,26 @@ QuickBite is a highly-interactive, beautifully animated application engineered t
 ├── firebase.json        # Firebase configuration definitions
 └── ...                  # Standard toolchain files (eslint, vite, vercel)
 ```
+---
+
+## 👨‍💻 Credits & Roles
+
+### 🧠 Lead Developer & Architect  
+**Yash Shah**
+- 🏗️ Designed and structured the complete application architecture from scratch  
+- 💻 Developed 100% of the codebase including frontend logic and state management  
+- 🎯 Engineered core features such as menu rendering, cart flow, and navigation system  
+- 🎨 Implemented full UI/UX design including animations, responsiveness, and interactions  
+- ⚡ Optimized performance using Vite and modern React practices  
+- 🚀 Managed deployment pipeline and production hosting (Vercel + Firebase)  
+- 🔥 Integrated Firebase services including Firestore, Storage, and security rules  
+- 📱 Ensured mobile-first design with seamless cross-device compatibility  
+
+---
+
+### 📸 Media Contributor  
+**Harshit Singh**
+- Contributed food imagery used within the application  
 
 <div align="center">
   <sub>Built with ❤️ by Yashu693 and Team</sub>
